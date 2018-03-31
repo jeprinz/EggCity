@@ -8,24 +8,31 @@ fun makeRiver(lis: ArrayList<Point>, wid: Double): River {
 
 fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
     var seglis: ArrayList<Segment> = pointToSeg(lis)
-    var top:ArrayList<Point> = ArrayList()
-    var bot:ArrayList<Point> = ArrayList()
-    for(s in seglis) {
-        var pl: ArrayList<Point> = getper(s,wid)
-        top.add(pl.get(0))
+    var top: ArrayList<Point> = ArrayList()
+    var bot: ArrayList<Point> = ArrayList()
+    var slop: Double = 0
+    for (s in seglis) {
+        var pl: ArrayList<Point> = getper(s, wid)
+        if (top.isEmpty() || slop > getSlop(s.p1, s.p2)) {
+            top.add(pl.get(0))
+        }
         top.add(pl.get(2))
-        bot.add(pl.get(1))
+        if (bot.isEmpty() || slop < getSlop(s.p1, s.p2)) {
+            bot.add(pl.get(1))
+        }
         bot.add(pl.get(3))
+        slop = getSlop(s.p1, s.p2)
     }
-    var lis:ArrayList<Segment> = ArrayList()
-    lis.add(Segment(bot.get(0),top.get(0)))
+    var lis: ArrayList<Segment> = ArrayList()
+    lis.add(Segment(bot.get(0), top.get(0)))
     lis.addAll(pointToSeg(top))
-    lis.add(Segment(top.get(top.size-1),bot.get(bot.size-1)))
+    lis.add(Segment(top.get(top.size - 1), bot.get(bot.size - 1)))
     lis.addAll(pointToSeg(bot))
     return Polygon(lis)
 
 }
-fun getper(s:Segment,wid: Double):ArrayList<Point> {
+
+fun getper(s: Segment, wid: Double): ArrayList<Point> {
     val slo = -1.0 / getSlop(s.p1, s.p2)
     val yd: Double = wid * Math.sin(Math.atan(slo))
     val xd: Double = wid * Math.cos(Math.atan(slo))
