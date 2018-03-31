@@ -18,7 +18,13 @@ fun makecity(rad: Double, varr: Double, precpon: Int, precrand:Int): City {
     }
     for(i in 0..precpon){
         var thet:Double = 6.283/precpon.toDouble()*i.toDouble()
-        arl.add(Point(arr.get(i).get(1)*Math.cos(arr.get(i).get(0)*thet), arr.get(i).get(2)*Math.sin(arr.get(i).get(0)*thet)))
+        var x:Double =0
+        var y: Double =0
+        for(j in 0..precrand){
+            x+=arr.get(j).get(1)*Math.cos(arr.get(j).get(0)*thet)
+            y+=arr.get(j).get(2)*Math.sin(arr.get(j).get(0)*thet)
+        }
+        arl.add(Point(x,y ))
     }
     return City(polyFromPoints(arl))
 }
