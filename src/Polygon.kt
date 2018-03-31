@@ -56,6 +56,17 @@ class Polygon(nsegs: Collection<Segment>) {
         return Polygon(newSegs)
     }
 
+    fun centroid(): Point { //doesn't actually calculate the centroid
+        var sx: Double = 0
+        var sy: Double = 0
+        pts.forEach(
+                {
+                    pt -> sx = sx + pt.x; sy = sy + pt.y
+                }
+        )
+        return Point(sx/pts.size, sy/pts.size)
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
