@@ -124,6 +124,13 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                 neighbor -> NodeId(neighbor.otherNode(node))
             })
         }
+        fun getSharedEdges(other: NodeId): Collection<Segment>{
+            return node.neighbors.filter{
+                edge -> edge.node1 == other || edge.node2 == other
+            }.map {
+                edge -> edge.data.seg
+            }
+        }
         fun getPolygon(): Polygon{
             return getPolygon(this)
         }
