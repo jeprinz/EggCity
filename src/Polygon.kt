@@ -2,7 +2,7 @@ class Polygon(nsegs: Collection<Segment>) {
     val pts: ArrayList<Point> = arrayListOf()
     val segs: ArrayList<Segment> = ArrayList(nsegs)
     init {
-        for (i in 0..pts.size) {
+        for (i in 0..segs.size-1) {
             pts.add(segs[i].p1)
         }
 //        for (i in 1..segs.size) {
@@ -25,7 +25,7 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun intersectSegment(segment: Segment): Segment? {
         segs.forEach(
-                {seg -> if (intersect(seg, segment)) {return segment}}
+                {seg -> if (intersect(seg, segment)) {return seg}}
         )
         return null
     }
@@ -68,8 +68,8 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun width(): Double {
-        var minx: Double = Double.MAX_VALUE
-        var maxx: Double = Double.MIN_VALUE
+        var minx: Double = pts[0].x
+        var maxx: Double = pts[0].x
         pts.forEach(
                 {
                     pt -> if (pt.x < minx) {minx = pt.x}; if (pt.x > maxx) {maxx = pt.x}
@@ -79,8 +79,8 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun height(): Double {
-        var minx: Double = Double.MAX_VALUE
-        var maxx: Double = Double.MIN_VALUE
+        var minx: Double = pts[0].x
+        var maxx: Double = pts[0].x
         pts.forEach(
                 {
                     pt -> if (pt.y < minx) {minx = pt.y}; if (pt.y > maxx) {maxx = pt.y}
@@ -91,10 +91,14 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun area(): Double {
         var shoelace: Double = 0.0
-        for (i in 0..pts.size) {
+        for (i in 0..pts.size-1) {
             shoelace = shoelace + pts[i].x*pts[(i+1)%pts.size].y - pts[i].y*pts[(i+1)%pts.size].x
         }
         return Math.abs(shoelace)/2
+    }
+
+    override fun toString(): String {
+        return segs.toString()
     }
 
 }
@@ -114,6 +118,10 @@ class Path(npts: ArrayList<Point>) {
             }
         }
     }
+
+    override fun toString(): String{
+        return segs.toString()
+    }
 }
 
 fun adjacent(P1: Polygon, P2: Polygon): Boolean {
@@ -131,11 +139,21 @@ class Point(nx: Double, ny: Double) {
             else -> (other as Point).x == x && other.y == y
         }
     }
+
+    override fun toString(): String {
+        return "[${x}, ${y}]"
+    }
+    fun equals(p: Point): Boolean {
+        return p.x == x && p.y == y
+    }
 }
 
 class Segment(initial: Point, terminal: Point) {
     val p1: Point = initial
     val p2: Point = terminal
+    override fun toString(): String {
+        return "[${p1}, ${p2}]"
+    }
 }
 
 fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are oriented counterclockwise
@@ -143,7 +161,11 @@ fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are or
 }
 
 fun intersect(s1: Segment, s2: Segment): Boolean {
-    return (ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))
+    if ((ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))) {
+        val ip = intersection(s1, s2)
+        return !(ip.equals(s1.p1) || ip.equals(s1.p2) || ip.equals(s2.p1) || ip.equals(s2.p2))
+    }
+    return false
 }
 
 fun intersection(s1: Segment, s2: Segment): Point {
@@ -163,7 +185,7 @@ fun main(args: Array<String>) {
 
 fun polyFromPoints(pts : List<Point>) : Polygon{
     val segs = arrayListOf<Segment>()
-    for (i in 0..pts.size){
+    for (i in 0..pts.size-1){
         segs.add(Segment(pts[i%pts.size], pts[(i+1)%pts.size]))
     }
     return Polygon(segs)

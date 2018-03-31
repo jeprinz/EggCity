@@ -18,6 +18,7 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
         val mincedClipper = oldPolygon.slicePoly(clipper);
         val mincedEdgesOld = sliceEdges(node.neighbors, clipper)
+        println("size mincedClip: ${mincedClipper.segs.size} size mincedEdgesOld: ${mincedEdgesOld.size}")
         mincedClipper.segs.forEach(
                 {
                     seg ->
