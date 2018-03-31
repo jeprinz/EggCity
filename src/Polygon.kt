@@ -154,6 +154,30 @@ class Segment(initial: Point, terminal: Point) {
     override fun toString(): String {
         return "[${p1}, ${p2}]"
     }
+    fun slope(): Double {
+        return (p1.y - p2.y)/(p1.x - p2.x)
+    }
+
+    fun minX(): Double {
+        return Math.min(p1.x, p2.x)
+    }
+
+    fun maxX(): Double {
+        return Math.max(p1.x, p2.x)
+    }
+
+    fun minY(): Double {
+        return Math.min(p1.y, p2.y)
+    }
+
+    fun maxY(): Double {
+        return Math.max(p1.y, p2.y)
+    }
+
+    fun equals(segment: Segment): Boolean {
+        return (p1 == segment.p1 && p2 == segment.p2) || (p2 == segment.p1 && p1 == segment.p2)
+    }
+
 }
 
 fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are oriented counterclockwise
@@ -163,9 +187,31 @@ fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are or
 fun intersect(s1: Segment, s2: Segment): Boolean {
     if ((ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))) {
         val ip = intersection(s1, s2)
+        if (ip.equals(Point(Double.NaN, Double.NaN))) {return false}
         return !(ip.equals(s1.p1) || ip.equals(s1.p2) || ip.equals(s2.p1) || ip.equals(s2.p2))
     }
     return false
+}
+
+fun concurrence(s1: Segment, s2: Segment): Segment? {
+    val slop = s1.slope()
+    if (slop == s2.slope() && slop == Segment(s1.p1, s2.p1).slope()) {
+        val x0: Double = Math.max(s1.minX(), s2.minX())
+        val x1: Double = Math.min(s1.maxX(), s2.maxX())
+        if (x0 >= x1) {return null}
+        else {
+            return Segment(Point(x0, s1.p1.y + slop*(x0 - s1.p1.x)), Point(x1, s1.p1.y + slop*(x1 - s1.p1.x)))
+        }
+    }
+    else if (slop.isNaN() && s2.slope().isNaN() && Segment(s1.p1, s2.p1).slope().isNaN()) {
+        val y0: Double = Math.max(s1.minY(), s2.minY())
+        val y1: Double = Math.min(s1.maxY(), s2.maxY())
+        if (y0 >= y1) {return null}
+        else {
+            return Segment(Point(s1.p1.x,y0), Point(s1.p1.x,y1))
+        }
+    }
+    return null
 }
 
 fun intersection(s1: Segment, s2: Segment): Point {
