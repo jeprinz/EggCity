@@ -2,11 +2,13 @@ import java.awt.Color
 
 fun main(args: Array<String>){
     val polyG = PolygonGraph<Structure>(ColoredThing(Color.YELLOW, makeRect(Point(0.0,0.0), 100.0, 200.0)))
+    println(polyG.getNodes().first().node.poly.segs)
 
     putRectInSpace(polyG.getNodes().first(), polyG, true)
 
 
-    println(polyG)
+    println(polyG.getNodes().first().node.poly.segs)
+    println(polyG.getNodes().size)
 }
 
 fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
@@ -43,6 +45,6 @@ fun makeRect(center: Point, width: Double, height: Double) : Polygon{
     val downLeft = Point(cx - width/2, cy - height/2)
     val downRight = Point(cx + width/2, cy - height/2)
 
-    return polyFromPoints(arrayListOf(upLeft, upRight, downLeft, downRight))
+    return polyFromPoints(arrayListOf(upLeft, upRight, downRight, downLeft))
 
 }

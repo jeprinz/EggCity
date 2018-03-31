@@ -25,7 +25,7 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun intersectSegment(segment: Segment): Segment? {
         segs.forEach(
-                {seg -> if (intersect(seg, segment)) {return segment}}
+                {seg -> if (intersect(seg, segment)) {return seg}}
         )
         return null
     }
@@ -97,6 +97,10 @@ class Polygon(nsegs: Collection<Segment>) {
         return Math.abs(shoelace)/2
     }
 
+    override fun toString(): String {
+        return segs.toString()
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
@@ -113,6 +117,10 @@ class Path(npts: ArrayList<Point>) {
                 }
             }
         }
+    }
+
+    override fun toString(): String{
+        return segs.toString()
     }
 }
 
@@ -131,11 +139,18 @@ class Point(nx: Double, ny: Double) {
             else -> (other as Point).x == x && other.y == y
         }
     }
+
+    override fun toString(): String {
+        return "[${x}, ${y}]"
+    }
 }
 
 class Segment(initial: Point, terminal: Point) {
     val p1: Point = initial
     val p2: Point = terminal
+    override fun toString(): String {
+        return "[${p1}, ${p2}]"
+    }
 }
 
 fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are oriented counterclockwise
