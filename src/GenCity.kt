@@ -6,7 +6,14 @@ fun genCity(size: Double) : PolygonGraph<Structure>{
 
     val rTwo = polyG.getNodes().first()
 
-    polyG.splitInnerPolygon(rTwo, city, cityOutline.shape)
+    val blank1 = polyG.splitInnerPolygon(rTwo, city, cityOutline.shape)
+
+
+    //Try drawing one road
+    val road = makeRoad(blank1.getPolygon(), 20.0)
+            
+    polyG.placePolygon(blank1, road.shape, road)
+
 
     return polyG
 
