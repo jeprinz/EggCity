@@ -174,10 +174,13 @@ class Segment(initial: Point, terminal: Point) {
         return Math.max(p1.y, p2.y)
     }
 
-    fun equals(segment: Segment): Boolean {
-        return (p1 == segment.p1 && p2 == segment.p2) || (p2 == segment.p1 && p1 == segment.p2)
+    override fun equals(other: Any?): Boolean {
+        return when {
+            this === other -> true
+            other?.javaClass != javaClass -> false
+            else -> (other as Segment).p1 == p1 && other.p2 == p2
+        }
     }
-
 }
 
 fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are oriented counterclockwise
