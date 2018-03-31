@@ -1,3 +1,4 @@
+/*
 import javafx.application.Application
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
@@ -119,4 +120,4 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
     val result = PolygonFX()
     result.points.addAll(doubleList)
     return result
-}
+}*/

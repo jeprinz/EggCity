@@ -56,6 +56,16 @@ class Graph<N, E> {
         }
     }
 
-    data class Edge<N, E>(val node1: Node<N, E>, val node2: Node<N, E>, val data : E)
+    data class Edge<N, E>(val node1: Node<N, E>, val node2: Node<N, E>, val data : E){
+        fun otherNode(theOneIHave: Node<N, E>): Node<N,E>{
+            if (theOneIHave == node1){
+                return node2
+            } else if (theOneIHave == node2){
+                return node1
+            } else{
+                throw RuntimeException("Well fuck")
+            }
+        }
+    }
 
 }

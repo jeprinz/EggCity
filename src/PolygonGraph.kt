@@ -52,7 +52,27 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
             edge -> adjacencies.removeEdge(edge)
         })
 
+        fixNode(node)
 
+    }
+
+    private fun fixNode(node: Graph.Node<NodeData, Edge>){
+        val edges = node.neighbors
+        fun adjace(a: Graph.Edge<NodeData, Edge>, b: Graph.Edge<NodeData, Edge>): Boolean{
+            val a1 = a.data.seg.p1
+            val a2 = a.data.seg.p2
+            val b1 = b.data.seg.p1
+            val b2 = b.data.seg.p2
+            return a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
+        }
+        val edgeGroups = floodfill(edges, {a, b -> adjace(a, b)})
+        for (edgeGroup in edgeGroups){
+            val newNode = adjacencies.addNode(node.node)
+            for (edge in edgeGroup){
+                adjacencies.addEdge(newNode, edge.otherNode(node), edge.data)
+            }
+        }
+        adjacencies.removeNode(node)
     }
 
     fun getNodes(): Collection<Graph.Node<NodeData, Edge>> {
