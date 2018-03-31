@@ -1,3 +1,5 @@
 fun main(args: Array<String>){
-    println("To egg we go")
+    var blah = arrayListOf<Int>()
+    blah.add(3)
+    print(blah.toString())
 }
