@@ -26,8 +26,9 @@ var segg: ArrayList<Segment> =pla.segs
     var lis:ArrayList<Segment> = ArrayList()
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm1x-xd,pm1y-yd)))
     lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
-    lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm2x-xd,pm2y-yd)))
+    lis.add(Segment(Point(pm2x-xd,pm2y-yd),Point(pm2x+xd,pm2y+yd)))
     lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm1x+xd,pm1y+yd)))
+    print(lis)
 
     return Road(Polygon(lis))
 
