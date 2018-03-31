@@ -67,6 +67,28 @@ class Polygon(nsegs: Collection<Segment>) {
         return Point(sx/pts.size, sy/pts.size)
     }
 
+    fun width(): Double {
+        var minx: Double = Double.MAX_VALUE
+        var maxx: Double = Double.MIN_VALUE
+        pts.forEach(
+                {
+                    pt -> if (pt.x < minx) {minx = pt.x}; if (pt.x > maxx) {maxx = pt.x}
+                }
+        )
+        return maxx - minx
+    }
+
+    fun height(): Double {
+        var minx: Double = Double.MAX_VALUE
+        var maxx: Double = Double.MIN_VALUE
+        pts.forEach(
+                {
+                    pt -> if (pt.y < minx) {minx = pt.y}; if (pt.y > maxx) {maxx = pt.y}
+                }
+        )
+        return maxx - minx
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
