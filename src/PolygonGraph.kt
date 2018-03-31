@@ -115,6 +115,9 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                 neighbor -> NodeId(neighbor.otherNode(node))
             })
         }
+        fun getPolygon(): Polygon{
+            return getPolygon(this)
+        }
     }
 }
 
