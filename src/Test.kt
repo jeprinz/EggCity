@@ -17,7 +17,7 @@ fun main(args: Array<String>){
 }
 
 
-fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
+fun putRectInSpace(blank : PolygonGraph<Structure>.NodeId, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
     val poly = polyG.getPolygon(blank)
     val centoid: Point = poly.centroid()
     val width: Double = poly.width()
