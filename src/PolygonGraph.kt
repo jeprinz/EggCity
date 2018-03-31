@@ -10,21 +10,50 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         return newNode
     }
 
-    fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon): {
-        val intClipSegs: ArrayList<Segment> = arrayListOf()
-        val intOldSegs: ArrayList<Segment> = arrayListOf()
-        val intersectingSegs: ArrayList<Segment> = arrayListOf()
+    fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon, n: NodeData) {
+        val inClip: ArrayList<Segment> = arrayListOf()
+        val inOld: ArrayList<Graph.Edge<NodeData, Edge>> = arrayListOf()
+        val interClip: ArrayList<Segment> = arrayListOf()
+        val interOld: ArrayList<Graph.Edge<NodeData, Edge>> = arrayListOf()
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
         clipper.segs.forEach(
                 {
-                    seg -> if (oldPolygon.inside(seg)) {intClipSegs.add(seg)}
-                    else if (oldPolygon.intersectSegment(seg)) {
-
+                    seg ->
+                    if (oldPolygon.inside(seg)) {
+                        inClip.add(seg)
+                    }
+                    else {
+                        val intersector = oldPolygon.intersectSegment(seg)
+                        if (intersector != null) {
+                            interClip.add(seg)
+                        }
                     }
                 }
         )
-        oldPolygon.segs.forEach(
-                {seg -> if (clipper.inside(seg))}
+        node.neighbors.forEach(
+                {
+                    e -> if (clipper.inside(e.data.seg)) {
+                        inOld.add(e)
+                    }
+                    else {
+                        val intersector = clipper.intersectSegment(e.data.seg)
+                        if (intersector != null) {
+                            interOld.add(e)
+                        }
+                    }
+                }
+        )
+
+        val newNode = adjacencies.addNode(n)
+        inClip.forEach(
+                {
+                    seg -> adjacencies.addEdge(newNode, node, Edge(seg))
+                }
+        )
+        inOld.forEach(
+                {
+                    e -> 
+                }
         )
 
     }

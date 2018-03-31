@@ -23,14 +23,11 @@ class Polygon(nsegs: Collection<Segment>) {
         return inside
     }
 
-    fun intersectSegment(segment: Segment): Boolean {
+    fun intersectSegment(segment: Segment): Segment? {
         segs.forEach(
-                {seg -> if (intersect(seg, segment)) {return true}}
+                {seg -> if (intersect(seg, segment)) {return segment}}
         )
-        return false
-    }
-
-    fun intersectionSegment(segment: Segment) {
+        return null
     }
 
     fun inside(seg: Segment): Boolean {
@@ -86,7 +83,10 @@ fun intersection(s1: Segment, s2: Segment): Point {
 }
 
 fun main(args: Array<String>) {
-    println("hiiii")
+    val seg1 = Segment(Point(1.0,1.0), Point(2.0,2.0))
+    val seg2 = Segment(Point(1.5,0.0), Point(1.5,8.0))
+    val inter = intersection(seg1, seg2)
+    println("(" + inter.x + "," + inter.y + ")")
 }
 
 fun polyFromPoints(pts : List<Point>) : Polygon{
