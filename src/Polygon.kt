@@ -143,6 +143,9 @@ class Point(nx: Double, ny: Double) {
     override fun toString(): String {
         return "[${x}, ${y}]"
     }
+    fun equals(p: Point): Boolean {
+        return p.x == x && p.y == y
+    }
 }
 
 class Segment(initial: Point, terminal: Point) {
@@ -158,7 +161,11 @@ fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are or
 }
 
 fun intersect(s1: Segment, s2: Segment): Boolean {
-    return (ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))
+    if ((ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))) {
+        val ip = intersection(s1, s2)
+        return !(ip.equals(s1.p1) || ip.equals(s1.p2) || ip.equals(s2.p1) || ip.equals(s2.p2))
+    }
+    return false
 }
 
 fun intersection(s1: Segment, s2: Segment): Point {
