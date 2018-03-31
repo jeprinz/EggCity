@@ -1,8 +1,6 @@
-/*
 import javafx.application.Application
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -11,12 +9,12 @@ import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
+import javafx.scene.input.ZoomEvent
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.shape.Polygon as PolygonFX
 import javafx.stage.Stage
-import java.util.*
 import kotlin.collections.LinkedHashMap
 
 class Canvas: Application() {
@@ -26,9 +24,15 @@ class Canvas: Application() {
         primaryStage.title = "City Generator"
 
         val polyGroup = Group()
+        polyGroup.onZoom = EventHandler { it ->
+            val scale = it.totalZoomFactor
+            polyGroup.scaleX = scale
+            polyGroup.scaleY = scale
+        }
 
         val comboVariance = ComboBox<String>(FXCollections.observableArrayList("High", "Medium", "Low"))
         comboVariance.promptText = "Variance"
+
         val textNumPoints = TextField()
         textNumPoints.promptText = "# of Pts"
         textNumPoints.textProperty().addListener(ChangeListener { _, _, newValue ->
@@ -36,8 +40,10 @@ class Canvas: Application() {
                 textNumPoints.text = newValue.replace(Regex("[^\\d]"), "")
             }
         })
+
         val comboRandomness = ComboBox<String>(FXCollections.observableArrayList("High", "Medium", "Low"))
         comboRandomness.promptText = "Randomness"
+
         val btn = Button("Generate")
         btn.onAction = EventHandler<ActionEvent>() {
             val variance = when {
@@ -46,39 +52,39 @@ class Canvas: Application() {
                 comboVariance.value == "Low" -> .25
                 else -> 0.0
             }
-            val numPoints = textNumPoints.text.toInt()
+            val numPoints = if (textNumPoints.text.isEmpty()) {50} else {textNumPoints.text.toInt()}
             val randomness = when {
                 comboRandomness.value == "High" -> 25
                 comboRandomness.value == "Medium" -> 10
                 comboRandomness.value == "Low" -> 5
                 else -> 0
             }
-            val city = makecity(300.0, variance, numPoints, randomness, 2.0)
-//            city.shape.segs.shuffle()
+            val city = makecity(300.0, variance, numPoints, randomness, 1.0)
+            city.shape.segs.shuffle()
             val cityPoly = polyToFXPoly(city.shape)
             cityPoly.fill = Color.rgb(255, 255, 255)
             cityPoly.stroke = Color.rgb(0, 0, 0)
 
             polyGroup.children.remove(0, polyGroup.children.size)
             polyGroup.children.add(cityPoly)
+
+            val cityStage = Stage()
+            val cityRoot = VBox()
+            cityRoot.children.add(polyGroup)
+            cityRoot.alignment = Pos.CENTER
+
+            cityStage.run {
+                scene = Scene(cityRoot, 500.0, 500.0)
+                show()
+            }
         }
 
-        val grid = GridPane()
-        grid.hgap = 10.0
-        grid.vgap = 10.0
-        grid.add(comboVariance,0, 0)
-        grid.add(textNumPoints,1, 0)
-        grid.add(comboRandomness,2, 0)
-        grid.add(btn,3, 0)
-
         val root = VBox()
-        root.children.add(grid)
-        root.children.add(polyGroup)
-        root.alignment = Pos.BASELINE_CENTER
-
+        root.children.addAll(comboVariance, textNumPoints, comboRandomness, btn)
+        root.alignment = Pos.CENTER
 
         primaryStage.run {
-            scene = Scene(root, 500.0, 500.0)
+            scene = Scene(root, 200.0, 200.0)
             show()
         }
     }
@@ -89,7 +95,6 @@ class Canvas: Application() {
             launch(Canvas::class.java)
         }
     }
-
 }
 
 fun polyToFXPoly(poly : Polygon) : PolygonFX {
@@ -107,17 +112,19 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
             throw RuntimeException("Segment has no adjacent segment")
         }
     }
-    val diff = 0.0
+    val diffX = 0.0
+    val diffY = 0.0
     val firstSeg = poly.segs[0]
-    val doubleList = arrayListOf(firstSeg.p1.x + diff, firstSeg.p1.y + diff)
-    println(doubleList[0])
+    val doubleList = arrayListOf(firstSeg.p1.x + diffX, firstSeg.p1.y + diffY)
     var currSeg = segMap[firstSeg]
     while (currSeg != firstSeg) {
-        doubleList.add(currSeg!!.p1.x + diff)
-        doubleList.add(currSeg.p1.y + diff)
+        doubleList.add(currSeg!!.p1.x + diffX)
+        doubleList.add(currSeg.p1.y + diffY)
         currSeg = segMap[currSeg]
     }
+//    doubleList.add(currSeg.p1.x + diff)
+//    doubleList.add(currSeg.p1.y + diff)
     val result = PolygonFX()
     result.points.addAll(doubleList)
     return result
-}*/
+}
