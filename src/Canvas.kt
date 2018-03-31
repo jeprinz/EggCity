@@ -9,6 +9,8 @@ import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
+import javafx.scene.input.MouseButton
+import javafx.scene.input.MouseDragEvent
 import javafx.scene.input.ZoomEvent
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
@@ -25,10 +27,13 @@ class Canvas: Application() {
 
         val polyGroup = Group()
         polyGroup.onZoom = EventHandler { it ->
+            it.consume()
             val scale = it.totalZoomFactor
             polyGroup.scaleX = scale
             polyGroup.scaleY = scale
         }
+
+
 
         val comboVariance = ComboBox<String>(FXCollections.observableArrayList("High", "Medium", "Low"))
         comboVariance.promptText = "Variance"
@@ -46,17 +51,17 @@ class Canvas: Application() {
 
         val btn = Button("Generate")
         btn.onAction = EventHandler<ActionEvent>() {
-            val variance = when {
-                comboVariance.value == "High" -> .7
-                comboVariance.value == "Medium" -> .5
-                comboVariance.value == "Low" -> .25
+            val variance = when (comboVariance.value) {
+                "High" -> .7
+                "Medium" -> .5
+                "Low" -> .25
                 else -> 0.0
             }
             val numPoints = if (textNumPoints.text.isEmpty()) {50} else {textNumPoints.text.toInt()}
-            val randomness = when {
-                comboRandomness.value == "High" -> 25
-                comboRandomness.value == "Medium" -> 10
-                comboRandomness.value == "Low" -> 5
+            val randomness = when (comboRandomness.value) {
+                "High" -> 25
+                "Medium" -> 10
+                "Low" -> 5
                 else -> 0
             }
             val cityOutline = makecity(300.0, variance, numPoints, randomness, 1.0)
@@ -64,13 +69,8 @@ class Canvas: Application() {
             cityPolyFX.fill = Color.rgb(255, 255, 255)
             cityPolyFX.stroke = Color.rgb(0, 0, 0)
 
-            val road = makeRoad(cityOutline.shape, 5.0)
-            val roadPolyFX = polyToFXPoly(road.shape)
-            roadPolyFX.fill = Color.rgb(0, 100, 0)
-
             polyGroup.children.remove(0, polyGroup.children.size)
             polyGroup.children.add(cityPolyFX)
-            polyGroup.children.add(roadPolyFX)
 
             val cityStage = Stage()
             val cityRoot = VBox()
@@ -106,8 +106,7 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
     var found = false
     for (seg1 in poly.segs) {
         for (seg2 in poly.segs) {
-            if ((seg1.p1 == seg2.p1 && seg1.p2 != seg1.p2) || (seg1.p1 == seg2.p2 && seg1.p2 != seg1.p1) ||
-                    (seg1.p2 == seg2.p1 && seg1.p1 != seg1.p2) || (seg1.p2 == seg2.p2 && seg1.p1 != seg1.p1)) {
+            if (matchOnePoint(seg1, seg2)) {
                 if (segMap[seg2] == seg1) {
                     continue
                 }
@@ -144,4 +143,28 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
     val result = PolygonFX()
     result.points.addAll(doubleList)
     return result
+}
+
+fun matchOnePoint(seg1: Segment, seg2: Segment) : Boolean {
+    return (seg1.p1 == seg2.p1 || seg1.p1 == seg2.p2 || seg1.p2 == seg2.p1 || seg1.p2 == seg2.p2) && seg1 != seg2
+}
+
+fun graphToPolyFXList(polygonGraph : PolygonGraph<Structure>): ArrayList<PolygonFX> {
+    val nodesList = polygonGraph.getNodes()
+    val polyFXList = ArrayList<PolygonFX>()
+    for (node in nodesList) {
+        val nodePoly = node.getPolygon()
+        val nodePolyFX = polyToFXPoly(nodePoly)
+        when (node.getData().javaClass) {
+            Road::class -> {
+                nodePolyFX.fill = Color.rgb(0, 0, 100)
+            }
+            else -> {
+                nodePolyFX.fill = Color.rgb(255, 255, 255)
+                nodePolyFX.stroke = Color.rgb(0, 0, 0)
+            }
+        }
+        polyFXList.add(nodePolyFX)
+    }
+    return polyFXList
 }
