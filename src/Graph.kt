@@ -10,6 +10,10 @@ class Graph<N, E> {
     }
 
     fun removeNode(node : Node<N, E>) {
+        for (edge in node.neighbors){
+            val otherNode = edge.otherNode(node)
+            otherNode.neighbors.removeAll(node.neighbors)
+        }
         edgeList.removeAll(node.neighbors)
         nodeMap.remove(node)
     }

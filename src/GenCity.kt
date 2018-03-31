@@ -11,13 +11,17 @@ fun genCity(size: Double) : PolygonGraph<Structure>{
 
     //Try drawing one road
     val road = makeRoad(blank1.getPolygon(), 20.0)
-            
+
     polyG.placePolygon(blank1, road.shape, road)
 
 
     return polyG
 
 
+}
+
+fun main(args: Array<String>){
+    val city = genCity(100.0)
 }
 
 class Rtwo : Structure

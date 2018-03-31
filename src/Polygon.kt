@@ -15,7 +15,7 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun inside(pt: Point): Boolean {
-        val ray = Segment(pt, Point(Double.MAX_VALUE, Double.MAX_VALUE))
+        val ray = Segment(pt, Point(999999999.0,999999999.0))
         var inside = false
         if (includesPoint(pt)) {
             return false

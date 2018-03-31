@@ -32,12 +32,8 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         val inClip: ArrayList<Segment> = arrayListOf()
         val inOld: HashMap<Segment, Graph.Edge<NodeData, Edge>> = hashMapOf()
         val oldPolygon: Polygon = Polygon(node.node.neighbors.map({edge -> edge.data.seg}))
-        println("clipper: ${clipper}")
-        println("oldPolygon: ${oldPolygon}")
         val mincedClipper = oldPolygon.slicePoly(clipper);
-        println("mincedClipper: ${mincedClipper}")
         val mincedEdgesOld = sliceEdges(node.node.neighbors, clipper)
-        println("size mincedClip: ${mincedClipper.segs.size} size mincedEdgesOld: ${mincedEdgesOld.size}")
         mincedClipper.segs.forEach(
                 {
                     seg ->
@@ -57,6 +53,7 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                     }
                 }
         )
+        println("inOld: ${inOld}, inClip: ${inClip}")
 
         val newNode = adjacencies.addNode(n)
         inClip.forEach(
@@ -67,13 +64,20 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         inOld.forEach(
                 {
                     (seg, e) ->
-                    val otherNode = if(e.node1 != node){e.node1}else{e.node2}
-                    adjacencies.addEdge(otherNode, newNode, Edge(seg))
+                    adjacencies.addEdge(e.otherNode(node.node), newNode, Edge(seg))
                 }
         )
         inOld.values.forEach({
             edge -> adjacencies.removeEdge(edge)
         })
+        mincedEdgesOld.forEach{
+            (seg, edge) ->
+            if (inOld.values.contains(edge) && !inOld.keys.contains(seg)){
+                adjacencies.addEdge(node.node, edge.otherNode(node.node), Edge(seg))
+            }
+        }
+
+        println("newEdges before fix: ${node.getPolygon()}")
     }
 
     private fun fixNode(node: Graph.Node<NodeData, Edge>){
@@ -86,13 +90,20 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
             return a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
         }
         val edgeGroups = floodfill(edges, {a, b -> adjace(a, b)})
+        adjacencies.removeNode(node)
         for (edgeGroup in edgeGroups){
             val newNode = adjacencies.addNode(node.node)
             for (edge in edgeGroup){
                 adjacencies.addEdge(newNode, edge.otherNode(node), edge.data)
             }
+            println("the poly is ${getPolygon(NodeId(newNode))}")
+
+            println("in fixnode still::")
+            getNodes().forEach{
+                nodeid -> println(nodeid.getPolygon())
+            }
+            println("end fixnode")
         }
-        adjacencies.removeNode(node)
     }
 
     fun getNodes(): Collection<NodeId> {
