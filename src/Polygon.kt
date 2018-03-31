@@ -17,10 +17,21 @@ class Polygon(nsegs: Collection<Segment>) {
     fun inside(pt: Point): Boolean {
         val ray = Segment(pt, Point(Double.MAX_VALUE, Double.MAX_VALUE))
         var inside = false
+        if (includesPoint(pt)) {
+            return false
+        }
         segs.forEach(
                 {seg -> inside = (inside != intersect(ray, seg))}
         )
         return inside
+    }
+
+    fun includesPoint(pt: Point): Boolean {
+        var on = false
+        segs.forEach(
+                {seg -> on = on || seg.contains(pt)}
+        )
+        return on
     }
 
     fun intersectSegment(segment: Segment): Segment? {
@@ -30,6 +41,10 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun inside(seg: Segment): Boolean {//actually is midpoint inside
         return inside(Point((seg.p1.x + seg.p2.x)/2, (seg.p1.y + seg.p2.y)/2))
+    }
+
+    fun midpointOn(seg: Segment): Boolean {
+        return includesPoint(Point((seg.p1.x + seg.p2.x)/2, (seg.p1.y + seg.p2.y)/2))
     }
 
     fun sliceSegment(seg: Segment) : Collection<Segment>{
@@ -152,6 +167,20 @@ class Segment(initial: Point, terminal: Point) {
     override fun toString(): String {
         return "[${p1}, ${p2}]"
     }
+
+    fun contains(pt: Point): Boolean {
+        if ((pt.y - p1.y)*(p2.x - p1.x) == (p2.y - p1.y)*(pt.x - p1.x)) {
+            if (minX() > pt.x || maxX() < pt.x) {
+                return false
+            }
+            if (minY() > pt.y || maxY() < pt.y) {
+                return false
+            }
+            return true
+        }
+        return false
+    }
+
     fun slope(): Double {
         return (p1.y - p2.y)/(p1.x - p2.x)
     }
