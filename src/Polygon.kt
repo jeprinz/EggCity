@@ -30,6 +30,9 @@ class Polygon(nsegs: Collection<Segment>) {
         return false
     }
 
+    fun intersectionSegment(segment: Segment) {
+    }
+
     fun inside(seg: Segment): Boolean {
         return (inside(seg.p1) && inside(seg.p2))
     }
@@ -72,6 +75,18 @@ fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are or
 
 fun intersect(s1: Segment, s2: Segment): Boolean {
     return (ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))
+}
+
+fun intersection(s1: Segment, s2: Segment): Point {
+    return Point((((s1.p1.x*s1.p2.y) - (s1.p1.y*s1.p2.x))*(s2.p1.x - s2.p2.x) - (s1.p1.x - s1.p2.x)*((s2.p1.x*s2.p2.y) - (s2.p1.y*s2.p2.x)))
+            / ((s1.p1.x - s1.p2.x)*(s2.p1.y - s2.p2.y) - (s1.p1.y - s1.p2.y)*(s2.p1.x - s2.p2.x)),
+            (((s1.p1.x*s1.p2.y) - (s1.p1.y*s1.p2.x))*(s2.p1.y - s2.p2.y) - (s1.p1.y - s1.p2.y)*((s2.p1.x*s2.p2.y) - (s2.p1.y*s2.p2.x)))
+                    / ((s1.p1.x - s1.p2.x)*(s2.p1.y - s2.p2.y) - (s1.p1.y - s1.p2.y)*(s2.p1.x - s2.p2.x))
+            )
+}
+
+fun main(args: Array<String>) {
+    println("hiiii")
 }
 
 fun polyFromPoints(pts : List<Point>) : Polygon{
