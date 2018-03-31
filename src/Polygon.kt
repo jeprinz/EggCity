@@ -59,6 +59,14 @@ fun adjacent(P1: Polygon, P2: Polygon): Boolean {
 class Point(nx: Double, ny: Double) {
     val x: Double = nx
     val y: Double = ny
+
+    override fun equals(other: Any?): Boolean {
+        return when {
+            this === other -> true
+            other?.javaClass != javaClass -> false
+            else -> (other as Point).x == x && other.y == y
+        }
+    }
 }
 
 class Segment(initial: Point, terminal: Point) {
