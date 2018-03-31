@@ -51,7 +51,6 @@ class Polygon(nsegs: Collection<Segment>) {
         val intersector = intersectSegment(seg);
         if(intersector != null){
             val mid = intersection(seg, intersector)
-            println("seg: ${seg}, intersector: ${intersector}")
             return sliceSegment(Segment(seg.p1, mid)).union(sliceSegment(Segment(mid, seg.p2)))
         } else {
             return arrayListOf(seg)
