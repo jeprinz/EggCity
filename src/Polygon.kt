@@ -2,7 +2,7 @@ class Polygon(nsegs: Collection<Segment>) {
     val pts: ArrayList<Point> = arrayListOf()
     val segs: ArrayList<Segment> = ArrayList(nsegs)
     init {
-        for (i in 0..pts.size-1) {
+        for (i in 0..segs.size-1) {
             pts.add(segs[i].p1)
         }
 //        for (i in 1..segs.size) {
