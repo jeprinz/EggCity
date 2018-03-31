@@ -172,6 +172,10 @@ class Segment(initial: Point, terminal: Point) {
         return Math.max(p1.y, p2.y)
     }
 
+    fun length(): Double{
+        return Math.sqrt(Math.pow((p2.x - p1.x),2.0) + Math.pow((p2.y - p1.y),2.0))
+    }
+
     override fun equals(other: Any?): Boolean {
         return when {
             this === other -> true
