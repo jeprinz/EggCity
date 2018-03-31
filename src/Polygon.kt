@@ -34,6 +34,28 @@ class Polygon(nsegs: Collection<Segment>) {
         return inside(Point((seg.p1.x + seg.p2.x)/2, (seg.p1.y + seg.p2.y)/2))
     }
 
+    fun sliceSegment(seg: Segment) : Collection<Segment>{
+        val intersector = intersectSegment(seg);
+        if(intersector != null){
+            val mid = intersection(seg, intersector)
+            return sliceSegment(Segment(seg.p1, mid)).union(sliceSegment(Segment(mid, seg.p2)))
+        } else {
+            return arrayListOf(seg)
+        }
+
+    }
+
+    fun slicePoly(chopMeUp : Polygon): Polygon{
+        val newSegs = arrayListOf<Segment>()
+        chopMeUp.segs.map(
+                {
+                    seg ->
+                    newSegs.addAll(sliceSegment(seg))
+                }
+        )
+        return Polygon(newSegs)
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {

@@ -12,11 +12,13 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         return newNode
     }
 
-    fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon, n: NodeData) {
+    fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon, n: NodeData) {//clipper is the poly were intersecting and making a new node out of
         val inClip: ArrayList<Segment> = arrayListOf()
-        val inOld: ArrayList<Graph.Edge<NodeData, Edge>> = arrayListOf()
+        val inOld: HashMap<Segment, Graph.Edge<NodeData, Edge>> = hashMapOf()
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
-        clipper.segs.forEach(
+        val mincedClipper = oldPolygon.slicePoly(clipper);
+        val mincedEdgesOld = sliceEdges(node.neighbors, clipper)
+        mincedClipper.segs.forEach(
                 {
                     seg ->
                     if (oldPolygon.inside(seg)) {
@@ -24,10 +26,11 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                     }
                 }
         )
-        node.neighbors.forEach(
+
+        mincedEdgesOld.forEach(
                 {
-                    e -> if (clipper.inside(e.data.seg)) {
-                        inOld.add(e)
+                    (seg, edge) -> if (clipper.inside(seg)) {
+                        inOld.put(seg, edge)
                     }
                 }
         )
@@ -40,12 +43,14 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         )
         inOld.forEach(
                 {
-                    e ->
+                    (seg, e) ->
                     val otherNode = if(e.node1 != node){e.node1}else{e.node2}
-                    adjacencies.removeEdge(e)
-                    adjacencies.addEdge(otherNode, newNode, e.data)
+                    adjacencies.addEdge(otherNode, newNode, Edge(seg))
                 }
         )
+        inOld.values.forEach({
+            edge -> adjacencies.removeEdge(edge)
+        })
 
 
     }
@@ -58,11 +63,34 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         val seg: Segment = segment
     }
 
+    //TODO get rid of next two FUN[]
     fun intersectSegmentWithEdges(segment: Segment, edges : Collection<Graph.Edge<NodeData, Edge>>): Graph.Edge<NodeData, Edge>? {
         edges.forEach(
                 {edge -> if (intersect(edge.data.seg, segment)) {return edge}}
         )
         return null
+    }
+
+    fun sliceSegment(seg: Segment, edges : Collection<Graph.Edge<NodeData, Edge>>) : Collection<Segment>{
+        val intersector = intersectSegmentWithEdges(seg, edges);
+        if(intersector != null){
+            val mid = intersection(seg, intersector.data.seg)
+            return sliceSegment(Segment(seg.p1, mid), edges).union(sliceSegment(Segment(mid, seg.p2), edges))
+        } else {
+            return arrayListOf(seg)
+        }
+
+    }
+
+    fun sliceEdges(chopMeUp : Collection<Graph.Edge<NodeData, Edge>>, knife : Polygon): Map<Segment, Graph.Edge<NodeData, Edge>>{
+        val map = hashMapOf<Segment, Graph.Edge<NodeData, Edge>>()
+        for (edge in chopMeUp){
+            val segs = knife.sliceSegment(edge.data.seg)
+            for (seg in segs){
+                map.put(seg, edge)
+            }
+        }
+        return map
     }
 }
 
