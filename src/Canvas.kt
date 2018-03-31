@@ -41,16 +41,16 @@ class Canvas: Application() {
         val btn = Button("Generate")
         btn.onAction = EventHandler<ActionEvent>() {
             val variance = when {
-                comboVariance.value == "High" -> .5
-                comboVariance.value == "Medium" -> .3
-                comboVariance.value == "Low" -> .1
+                comboVariance.value == "High" -> .7
+                comboVariance.value == "Medium" -> .5
+                comboVariance.value == "Low" -> .25
                 else -> 0.0
             }
             val numPoints = textNumPoints.text.toInt()
             val randomness = when {
-                comboRandomness.value == "High" -> 1000
-                comboRandomness.value == "Medium" -> 100
-                comboRandomness.value == "Low" -> 10
+                comboRandomness.value == "High" -> 25
+                comboRandomness.value == "Medium" -> 10
+                comboRandomness.value == "Low" -> 5
                 else -> 0
             }
             val city = makecity(300.0, variance, numPoints, randomness, 2.0)

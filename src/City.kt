@@ -14,8 +14,11 @@ class City(shap: Polygon) {
 fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int,cof:Double): City {
     var arl: ArrayList<Point> = ArrayList()
     var arr: ArrayList<Array<Double>> = ArrayList()
+    var xm:Double=.5+.5*Math.random()
+    var ym:Double=.5+.5*Math.random()
+
     for (i in 0..precrand) {
-        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), Math.random()*(precrand-i)/precrand ,Math.random()*6.284))
+        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), Math.random()*(precrand-i)/precrand,Math.random()*6.283 ))
     }
     for (i in 0..precpon) {
         var thet: Double = 6.283 / precpon.toDouble() * i.toDouble()
@@ -26,8 +29,8 @@ fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int,cof:Double):
             r += arr.get(j).get(1)*rad/precrand*((Math.cos((arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet))+Math.sin(arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet )))
 
         }
-        x=Math.pow(1.5*(.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.cos(thet)
-        y=Math.pow(1.5*(.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.sin(thet)
+        x=.5*xm*Math.pow((varr*r+rad)/rad,cof)*rad*Math.cos(thet)
+        y=.5*ym*Math.pow((varr*r+rad)/rad,cof)*rad*Math.sin(thet)
         arl.add(Point(x, y))
     }
     return City(polyFromPoints(arl))
