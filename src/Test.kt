@@ -32,7 +32,7 @@ fun putRectInSpace(blank : PolygonGraph<Structure>.NodeId, polyG: PolygonGraph<S
 
         val structure = ColoredThing(Color.WHITE)
 
-        polyG.splitPolygon(blank,  rect, structure)
+        polyG.placePolygon(blank,  rect, structure)
         return true
     } else {
         return false

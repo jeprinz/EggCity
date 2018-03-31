@@ -29,8 +29,8 @@ fun makeRoad(pla: Polygon, siz: Double): Road {
     val p1: Point = getPoint(s1);
     val p2: Point = getPoint(s2)
     val slope: Double = getSlop(p1, p2)
-    val pm1: Point = Point(p1.x - 100 * siz * Math.cos(Math.atan(slope)), p1.y - 100 * siz * Math.sin(Math.atan(slope)))
-    val pm2: Point = Point(p2.x - 100 * siz * Math.cos(Math.atan(slope)), p2.y - 100 * siz * Math.sin(Math.atan(slope)))
+    val pm1: Point = Point(p1.x - 1000 * siz * Math.cos(Math.atan(slope)), p1.y - 1000 * siz * Math.sin(Math.atan(slope)))
+    val pm2: Point = Point(p2.x - 1000 * siz * Math.cos(Math.atan(slope)), p2.y - 1000 * siz * Math.sin(Math.atan(slope)))
 
     val lis: ArrayList<Segment> = poiToRoad(pm1, pm2, siz)
 
