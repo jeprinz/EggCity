@@ -16,8 +16,17 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         val intersectingSegs: ArrayList<Segment> = arrayListOf()
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
         clipper.segs.forEach(
-                {seg -> if (inside(seg))}
+                {
+                    seg -> if (oldPolygon.inside(seg)) {intClipSegs.add(seg)}
+                    else if (oldPolygon.intersectSegment(seg)) {
+
+                    }
+                }
         )
+        oldPolygon.segs.forEach(
+                {seg -> if (clipper.inside(seg))}
+        )
+
     }
 
     fun getNodes(): Collection<Graph.Node<NodeData, Edge>> {
