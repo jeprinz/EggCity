@@ -22,9 +22,12 @@ class Canvas: Application() {
         }
 
         val city = makecity(100.0, 0.25, 100, 3)
+        val cityPoly = polyToFXPoly(city.shape)
+        cityPoly.fill = Color.rgb(255, 255, 255)
+                cityPoly.stroke = Color.rgb(0, 0, 0)
 
         val root = Group()
-        root.children.add(polyToFXPoly(city.shape))
+        root.children.add(cityPoly)
 
         primaryStage.run {
             scene = Scene(root, 400.0, 400.0)
