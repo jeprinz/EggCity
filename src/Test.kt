@@ -3,15 +3,16 @@ import java.awt.Color
 fun main(args: Array<String>){
     val polyG = PolygonGraph<Structure>(ColoredThing(Color.YELLOW, makeRect(Point(0.0,0.0), 100.0, 200.0)))
 
-    val numbs = arrayListOf<Int>(1,2,3,4,5,6,7,8,9)
-    val groups = floodfill<Int>(numbs, {a,b -> a-b==2 || b-a==2})
-    println(groups)
+    putRectInSpace(polyG.getNodes().first(), polyG, true)
+
+
+    println(polyG)
 }
 
-fun putRectInSpace(blank: Blank, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
-    val centoid: Point = blank.poly.centroid()
-    val width: Double = blank.poly.width()
-    val height: Double = blank.poly.height()
+fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
+    val centoid: Point = blank.node.poly.centroid()
+    val width: Double = blank.node.poly.width()
+    val height: Double = blank.node.poly.height()
     if (width > 50 && height > 50){
         val rect: Polygon
         if (vertical){
@@ -19,7 +20,11 @@ fun putRectInSpace(blank: Blank, polyG: PolygonGraph<Structure>, vertical: Boole
         } else{
             rect = makeRect(centoid, 10000.0, height*.1)
         }
-        return false
+
+        val structure = ColoredThing(Color.WHITE, rect)
+
+        polyG.splitPolygon(blank,  rect, structure)
+        return true
     } else {
         return false
     }
