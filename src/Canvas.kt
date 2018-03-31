@@ -20,7 +20,7 @@ class Canvas: Application() {
             println("Clicked")
         }
 
-        val city = makecity(100.0, 0.0, 100, 3)
+        val city = makecity(100.0, .50, 100, 3)
         city.shape.segs.shuffle()
         val cityPoly = polyToFXPoly(city.shape)
         cityPoly.fill = Color.rgb(255, 255, 255)
