@@ -69,7 +69,7 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun width(): Double {
         var minx: Double = Double.MAX_VALUE
-        var maxx: Double = Double.MIN_VALUE
+        var maxx: Double = -Double.MAX_VALUE
         pts.forEach(
                 {
                     pt -> if (pt.x < minx) {minx = pt.x}; if (pt.x > maxx) {maxx = pt.x}
@@ -80,7 +80,7 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun height(): Double {
         var minx: Double = Double.MAX_VALUE
-        var maxx: Double = Double.MIN_VALUE
+        var maxx: Double = -Double.MAX_VALUE
         pts.forEach(
                 {
                     pt -> if (pt.y < minx) {minx = pt.y}; if (pt.y > maxx) {maxx = pt.y}
