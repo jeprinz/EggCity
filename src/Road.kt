@@ -3,8 +3,8 @@ import com.sun.deploy.registration.InstallHints
 class Road(shap:Polygon) {
     val shape:Polygon=shap
 }
-fun makeRoad(bla:Blank, siz:Double):Road {
-var segg: ArrayList<Segment> =bla.poly.segs
+fun makeRoad(pla:Polygon, siz:Double):Road {
+var segg: ArrayList<Segment> =pla.segs
     var i1:Int =0
     var i2:Int =0
     while (i1==i2) {
@@ -27,7 +27,7 @@ var segg: ArrayList<Segment> =bla.poly.segs
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm1x-xd,pm1y-yd)))
     lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
     lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm2x-xd,pm2y-yd)))
-    lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm2x+xd,pm2y+yd)))
+    lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm1x+xd,pm1y+yd)))
 
     return Road(Polygon(lis))
 
