@@ -88,3 +88,11 @@ fun intersection(s1: Segment, s2: Segment): Point {
 fun main(args: Array<String>) {
     println("hiiii")
 }
+
+fun polyFromPoints(pts : List<Point>) : Polygon{
+    val segs = arrayListOf<Segment>()
+    for (i in 0..pts.size){
+        segs.add(Segment(pts[i%pts.size], pts[(i+1)%pts.size]))
+    }
+    return Polygon(segs)
+}

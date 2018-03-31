@@ -20,5 +20,5 @@ fun makecity(rad: Double, varr: Double, precpon: Int, precrand:Int): City {
         var thet:Double = 6.283/precpon.toDouble()*i.toDouble()
         arl.add(Point(arr.get(i).get(1)*Math.cos(arr.get(i).get(0)*thet), arr.get(i).get(2)*Math.sin(arr.get(i).get(0)*thet)))
     }
-    return City(Polygon(arl))
+    return City(polyFromPoints(arl))
 }
