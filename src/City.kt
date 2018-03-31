@@ -26,9 +26,8 @@ fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int,cof:Double):
             r += arr.get(j).get(1)*rad/precrand*((Math.cos((arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet))+Math.sin(arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet )))
 
         }
-        print((varr*r+rad*(1.0-varr))/rad)
-        x=Math.pow((.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.cos(thet)
-        y=Math.pow((.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.sin(thet)
+        x=Math.pow(1.5*(.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.cos(thet)
+        y=Math.pow(1.5*(.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.sin(thet)
         arl.add(Point(x, y))
     }
     return City(polyFromPoints(arl))
