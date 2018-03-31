@@ -74,7 +74,7 @@ fun intersect(s1: Segment, s2: Segment): Boolean {
     return (ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))
 }
 
-fun polyFromPoints(pts : List<Point>, yes : Boolean) : Polygon{
+fun polyFromPoints(pts : List<Point>) : Polygon{
     val segs = arrayListOf<Segment>()
     for (i in 0..pts.size){
         segs.add(Segment(pts[i%pts.size], pts[(i+1)%pts.size]))
