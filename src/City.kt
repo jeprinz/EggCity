@@ -1,3 +1,5 @@
+import kotlin.math.cos
+
 class City(shap: Polygon) {
     val shape: Polygon = shap
 
@@ -12,18 +14,20 @@ class City(shap: Polygon) {
 fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int): City {
     var arl: ArrayList<Point> = ArrayList()
     var arr: ArrayList<Array<Double>> = ArrayList()
-    arr.add( arrayOf(1.0, rad * (1.0 - varr), rad * (1.0 - varr)))
-    for (i in 1..precrand) {
-        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), rad * Math.random() * 2.0 * varr / precrand.toDouble(), rad * Math.random() * 2.0 * varr / precrand.toDouble()))
+    for (i in 0..precrand) {
+        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), Math.random() ,Math.random()*6.284))
     }
     for (i in 0..precpon) {
         var thet: Double = 6.283 / precpon.toDouble() * i.toDouble()
         var x: Double = 0.0
         var y: Double = 0.0
+        var r :Double =0.0
         for (j in 0..precrand) {
-            x += arr.get(j).get(1) * Math.cos(arr.get(j).get(0) * thet)
-            y += arr.get(j).get(2) * Math.sin(arr.get(j).get(0) * thet)
+            r += arr.get(j).get(1)*rad/precrand*((Math.cos((arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet)+Math.sin(arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet ))))
+
         }
+        x=Math.pow((varr*r+rad*(1.0-varr))/rad,5.0)*rad*Math.cos(thet)
+        y=Math.pow((varr*r+rad*(1.0-varr))/rad,5.0)*rad*Math.sin(thet)
         arl.add(Point(x, y))
     }
     return City(polyFromPoints(arl))
