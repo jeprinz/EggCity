@@ -10,7 +10,7 @@ fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
     var seglis: ArrayList<Segment> = pointToSeg(lis)
     var top: ArrayList<Point> = ArrayList()
     var bot: ArrayList<Point> = ArrayList()
-    var slop: Double = 0
+    var slop: Double = 0.0
     for (s in seglis) {
         var pl: ArrayList<Point> = getper(s, wid)
         if (top.isEmpty() || slop > getSlop(s.p1, s.p2)) {
