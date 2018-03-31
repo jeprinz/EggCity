@@ -11,11 +11,11 @@ class City(shap: Polygon) {
  * precpon is how many points define the city
  * precrand is how many trig functions we use
  */
-fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int): City {
+fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int,cof:Double): City {
     var arl: ArrayList<Point> = ArrayList()
     var arr: ArrayList<Array<Double>> = ArrayList()
     for (i in 0..precrand) {
-        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), Math.random() ,Math.random()*6.284))
+        arr.add( arrayOf(Math.pow(2.0, i.toDouble()), Math.random()*(precrand-i)/precrand ,Math.random()*6.284))
     }
     for (i in 0..precpon) {
         var thet: Double = 6.283 / precpon.toDouble() * i.toDouble()
@@ -23,11 +23,12 @@ fun makecity(rad: Double, varr: Double, precpon: Int, precrand: Int): City {
         var y: Double = 0.0
         var r :Double =0.0
         for (j in 0..precrand) {
-            r += arr.get(j).get(1)*rad/precrand*((Math.cos((arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet)+Math.sin(arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet ))))
+            r += arr.get(j).get(1)*rad/precrand*((Math.cos((arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet))+Math.sin(arr.get(j).get(2)+1.0*arr.get(j).get(0)*thet )))
 
         }
-        x=Math.pow((varr*r+rad*(1.0-varr))/rad,5.0)*rad*Math.cos(thet)
-        y=Math.pow((varr*r+rad*(1.0-varr))/rad,5.0)*rad*Math.sin(thet)
+        print((varr*r+rad*(1.0-varr))/rad)
+        x=Math.pow((.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.cos(thet)
+        y=Math.pow((.5*varr*r+rad*(1.0-varr))/rad,cof)*rad*Math.sin(thet)
         arl.add(Point(x, y))
     }
     return City(polyFromPoints(arl))
