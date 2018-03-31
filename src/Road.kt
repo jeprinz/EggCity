@@ -15,14 +15,15 @@ var segg: ArrayList<Segment> =pla.segs
     var s2:Segment=segg.get(i2)
     var pm1:Point=getPoint(s1);
     var pm2:Point=getPoint(s2)
-    var pm1x:Double=pm1.x
-    var pm1y:Double=pm1.y
-    var pm2x:Double=pm2.x
-    var pm2y:Double=pm2.y
+    var slope:Double = getSlop(pm1,pm2)
+    var pm1x:Double=pm1.x-siz*Math.cos(Math.atan(slope))
+    var pm1y:Double=pm1.y-siz*Math.sin(Math.atan(slope))
+    var pm2x:Double=pm2.x+siz*Math.cos(Math.atan(slope))
+    var pm2y:Double=pm2.y+siz*Math.sin(Math.atan(slope))
 
     var slo=-1.0/getSlop(pm1,pm2)
-    var yd:Double= siz/2*slo
-    var xd:Double=Math.pow(siz*siz/4-yd*yd,.5)
+    var yd:Double= siz*Math.sin(Math.atan(slo))
+    var xd:Double=siz*Math.cos(Math.atan(slo))
     var lis:ArrayList<Segment> = ArrayList()
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm1x-xd,pm1y-yd)))
     lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
