@@ -89,6 +89,14 @@ class Polygon(nsegs: Collection<Segment>) {
         return maxx - minx
     }
 
+    fun area(): Double {
+        var shoelace: Double = 0.0
+        for (i in 0..pts.size) {
+            shoelace = shoelace + pts[i].x*pts[(i+1)%pts.size].y - pts[i].y*pts[(i+1)%pts.size].x
+        }
+        return Math.abs(shoelace)/2
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
