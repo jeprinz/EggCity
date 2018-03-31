@@ -57,14 +57,36 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun centroid(): Point { //doesn't actually calculate the centroid
-        var sx: Double = 0
-        var sy: Double = 0
+        var sx: Double = 0.0
+        var sy: Double = 0.0
         pts.forEach(
                 {
                     pt -> sx = sx + pt.x; sy = sy + pt.y
                 }
         )
         return Point(sx/pts.size, sy/pts.size)
+    }
+
+    fun width(): Double {
+        var minx: Double = Double.MAX_VALUE
+        var maxx: Double = Double.MIN_VALUE
+        pts.forEach(
+                {
+                    pt -> if (pt.x < minx) {minx = pt.x}; if (pt.x > maxx) {maxx = pt.x}
+                }
+        )
+        return maxx - minx
+    }
+
+    fun height(): Double {
+        var minx: Double = Double.MAX_VALUE
+        var maxx: Double = Double.MIN_VALUE
+        pts.forEach(
+                {
+                    pt -> if (pt.y < minx) {minx = pt.y}; if (pt.y > maxx) {maxx = pt.y}
+                }
+        )
+        return maxx - minx
     }
 
 }
