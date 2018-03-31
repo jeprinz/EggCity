@@ -1,3 +1,5 @@
+import javax.xml.soap.Node
+
 class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data??????????
     val adjacencies : Graph<NodeData, Edge> = Graph()
     init {
@@ -13,8 +15,6 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
     fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon, n: NodeData) {
         val inClip: ArrayList<Segment> = arrayListOf()
         val inOld: ArrayList<Graph.Edge<NodeData, Edge>> = arrayListOf()
-        val interClip: ArrayList<Segment> = arrayListOf()
-        val interOld: ArrayList<Graph.Edge<NodeData, Edge>> = arrayListOf()
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
         clipper.segs.forEach(
                 {
@@ -22,24 +22,12 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                     if (oldPolygon.inside(seg)) {
                         inClip.add(seg)
                     }
-                    else {
-                        val intersector = oldPolygon.intersectSegment(seg)
-                        if (intersector != null) {
-                            interClip.add(seg)
-                        }
-                    }
                 }
         )
         node.neighbors.forEach(
                 {
                     e -> if (clipper.inside(e.data.seg)) {
                         inOld.add(e)
-                    }
-                    else {
-                        val intersector = clipper.intersectSegment(e.data.seg)
-                        if (intersector != null) {
-                            interOld.add(e)
-                        }
                     }
                 }
         )
@@ -52,9 +40,13 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         )
         inOld.forEach(
                 {
-                    e -> 
+                    e ->
+                    val otherNode = if(e.node1 != node){e.node1}else{e.node2}
+                    adjacencies.removeEdge(e)
+                    adjacencies.addEdge(otherNode, newNode, e.data)
                 }
         )
+
 
     }
 
@@ -64,6 +56,13 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
 
     class Edge (segment: Segment){
         val seg: Segment = segment
+    }
+
+    fun intersectSegmentWithEdges(segment: Segment, edges : Collection<Graph.Edge<NodeData, Edge>>): Graph.Edge<NodeData, Edge>? {
+        edges.forEach(
+                {edge -> if (intersect(edge.data.seg, segment)) {return edge}}
+        )
+        return null
     }
 }
 

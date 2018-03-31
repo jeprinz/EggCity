@@ -30,9 +30,10 @@ class Polygon(nsegs: Collection<Segment>) {
         return null
     }
 
-    fun inside(seg: Segment): Boolean {
-        return (inside(seg.p1) && inside(seg.p2))
+    fun inside(seg: Segment): Boolean {//actually is midpoint inside
+        return inside(Point((seg.p1.x + seg.p2.x)/2, (seg.p1.y + seg.p2.y)/2))
     }
+
 }
 
 class Path(npts: ArrayList<Point>) {
