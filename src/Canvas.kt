@@ -60,12 +60,12 @@ class Canvas: Application() {
                 else -> 0
             }
             val cityOutline = makecity(300.0, variance, numPoints, randomness, 1.0)
-            val cityPolyFX = polyToFXPoly(cityOutline.shape, false)
+            val cityPolyFX = polyToFXPoly(cityOutline.shape)
             cityPolyFX.fill = Color.rgb(255, 255, 255)
             cityPolyFX.stroke = Color.rgb(0, 0, 0)
 
             val road = makeRoad(cityOutline.shape, 5.0)
-            val roadPolyFX = polyToFXPoly(road.shape, false)
+            val roadPolyFX = polyToFXPoly(road.shape)
             roadPolyFX.fill = Color.rgb(0, 100, 0)
 
             polyGroup.children.remove(0, polyGroup.children.size)
@@ -101,14 +101,10 @@ class Canvas: Application() {
     }
 }
 
-fun polyToFXPoly(poly : Polygon, printVals: Boolean) : PolygonFX {
+fun polyToFXPoly(poly : Polygon) : PolygonFX {
     val segMap = LinkedHashMap<Segment, Segment>()
-//    val segsFound = ArrayList<Segment>()
     var found = false
     for (seg1 in poly.segs) {
-        if (printVals) {
-            println("(" + seg1.p1.x + "," + seg1.p1.y + ") (" + seg1.p2.x + "," + seg1.p2.y + ")")
-        }
         for (seg2 in poly.segs) {
             if ((seg1.p1 == seg2.p1 && seg1.p2 != seg1.p2) || (seg1.p1 == seg2.p2 && seg1.p2 != seg1.p1) ||
                     (seg1.p2 == seg2.p1 && seg1.p1 != seg1.p2) || (seg1.p2 == seg2.p2 && seg1.p1 != seg1.p1)) {
