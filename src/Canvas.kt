@@ -7,8 +7,7 @@ import javafx.scene.control.Button
 import javafx.scene.paint.Color
 import javafx.scene.shape.Polygon as PolygonFX
 import javafx.stage.Stage
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
 
 class Canvas: Application() {
 
@@ -21,7 +20,8 @@ class Canvas: Application() {
             println("Clicked")
         }
 
-        val city = makecity(100.0, 0.25, 100, 3)
+        val city = makecity(100.0, 0.0, 100, 3)
+        city.shape.segs.shuffle()
         val cityPoly = polyToFXPoly(city.shape)
         cityPoly.fill = Color.rgb(255, 255, 255)
                 cityPoly.stroke = Color.rgb(0, 0, 0)
@@ -45,25 +45,29 @@ class Canvas: Application() {
 }
 
 fun polyToFXPoly(poly : Polygon) : PolygonFX {
-    val doubleList = arrayListOf<Double>()
-    for (seg in poly.segs) {
-        doubleList.add(seg.p1.x + 200)
-        doubleList.add(seg.p1.y + 200)
-    }
-    println(doubleList.toString())
-    val result = PolygonFX()
-    result.points.addAll(doubleList)
-    return result
-}
-
-fun polyToFXPoly2(poly : Polygon) : PolygonFX {
-    val segMap = TreeMap<Segment, Segment>()
-    val doubleList = arrayListOf<Double>()
+    val segMap = LinkedHashMap<Segment, Segment>()
+    var found = false
     for (seg1 in poly.segs) {
         for (seg2 in poly.segs) {
-
+            if (seg1.p2 == seg2.p1) {
+                segMap[seg1] = seg2
+                found = true
+                break
+            }
+        }
+        if (!found) {
+            throw RuntimeException("Segment has no adjacent segment")
         }
     }
+    val firstSeg = poly.segs[0]
+    val doubleList = arrayListOf(firstSeg.p1.x + 200, firstSeg.p1.y + 200)
+    var currSeg = segMap[firstSeg]
+    while (currSeg != firstSeg) {
+        doubleList.add(currSeg!!.p1.x + 200)
+        doubleList.add(currSeg.p1.y + 200)
+        currSeg = segMap[currSeg]
+    }
+
     val result = PolygonFX()
     result.points.addAll(doubleList)
     return result

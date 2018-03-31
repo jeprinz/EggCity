@@ -23,19 +23,50 @@ class Polygon(nsegs: Collection<Segment>) {
         return inside
     }
 
-    fun intersectSegment(segment: Segment): Boolean {
+    fun intersectSegment(segment: Segment): Segment? {
         segs.forEach(
-                {seg -> if (intersect(seg, segment)) {return true}}
+                {seg -> if (intersect(seg, segment)) {return segment}}
         )
-        return false
+        return null
     }
 
-    fun intersectionSegment(segment: Segment) {
+    fun inside(seg: Segment): Boolean {//actually is midpoint inside
+        return inside(Point((seg.p1.x + seg.p2.x)/2, (seg.p1.y + seg.p2.y)/2))
     }
 
-    fun inside(seg: Segment): Boolean {
-        return (inside(seg.p1) && inside(seg.p2))
+    fun sliceSegment(seg: Segment) : Collection<Segment>{
+        val intersector = intersectSegment(seg);
+        if(intersector != null){
+            val mid = intersection(seg, intersector)
+            return sliceSegment(Segment(seg.p1, mid)).union(sliceSegment(Segment(mid, seg.p2)))
+        } else {
+            return arrayListOf(seg)
+        }
+
     }
+
+    fun slicePoly(chopMeUp : Polygon): Polygon{
+        val newSegs = arrayListOf<Segment>()
+        chopMeUp.segs.map(
+                {
+                    seg ->
+                    newSegs.addAll(sliceSegment(seg))
+                }
+        )
+        return Polygon(newSegs)
+    }
+
+    fun centroid(): Point { //doesn't actually calculate the centroid
+        var sx: Double = 0
+        var sy: Double = 0
+        pts.forEach(
+                {
+                    pt -> sx = sx + pt.x; sy = sy + pt.y
+                }
+        )
+        return Point(sx/pts.size, sy/pts.size)
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
@@ -62,6 +93,14 @@ fun adjacent(P1: Polygon, P2: Polygon): Boolean {
 class Point(nx: Double, ny: Double) {
     val x: Double = nx
     val y: Double = ny
+
+    override fun equals(other: Any?): Boolean {
+        return when {
+            this === other -> true
+            other?.javaClass != javaClass -> false
+            else -> (other as Point).x == x && other.y == y
+        }
+    }
 }
 
 class Segment(initial: Point, terminal: Point) {
@@ -86,7 +125,10 @@ fun intersection(s1: Segment, s2: Segment): Point {
 }
 
 fun main(args: Array<String>) {
-    println("hiiii")
+    val seg1 = Segment(Point(1.0,1.0), Point(2.0,2.0))
+    val seg2 = Segment(Point(1.5,0.0), Point(1.5,8.0))
+    val inter = intersection(seg1, seg2)
+    println("(" + inter.x + "," + inter.y + ")")
 }
 
 fun polyFromPoints(pts : List<Point>) : Polygon{
