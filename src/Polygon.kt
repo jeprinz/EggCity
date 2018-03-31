@@ -5,13 +5,13 @@ class Polygon(nsegs: Collection<Segment>) {
         for (i in 0..pts.size) {
             pts.add(segs[i].p1)
         }
-        for (i in 1..segs.size) {
-            for (j in 0..i) {
-                if (intersect(segs[i], segs[j])) {
-                    throw RuntimeException("Polygon is self-intersecting")
-                }
-            }
-        }
+//        for (i in 1..segs.size) {
+//            for (j in 0..i) {
+//                if (intersect(segs[i], segs[j])) {
+//                    throw RuntimeException("Polygon is self-intersecting")
+//                }
+//            }
+//        }
     }
 
     fun inside(pt: Point): Boolean {

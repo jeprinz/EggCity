@@ -66,3 +66,4 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         val seg: Segment = segment
     }
 }
+
