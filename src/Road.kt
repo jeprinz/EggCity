@@ -27,7 +27,7 @@ var segg: ArrayList<Segment> =bla.poly.segs
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm1x-xd,pm1y-yd)))
     lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
     lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm2x-xd,pm2y-yd)))
-    lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm2x+xd,pm2y+yd)))
+    lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm1x+xd,pm1y+yd)))
 
     return Road(Polygon(lis))
 
