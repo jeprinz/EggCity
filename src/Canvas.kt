@@ -64,7 +64,7 @@ class Canvas: Application() {
             cityPolyFX.fill = Color.rgb(255, 255, 255)
             cityPolyFX.stroke = Color.rgb(0, 0, 0)
 
-            val road = makeRoad(cityOutline.shape, 5.0)
+            val road = makeRoad(cityOutline.shape, 2.0)
             val roadPolyFX = polyToFXPoly(road.shape, false)
             roadPolyFX.fill = Color.rgb(0, 100, 0)
 

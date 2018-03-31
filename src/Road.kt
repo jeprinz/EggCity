@@ -15,10 +15,10 @@ fun makeRoad(pla: Polygon, siz: Double): Road {
     val pm1: Point = getPoint(s1);
     val pm2: Point = getPoint(s2)
     val slope: Double = getSlop(pm1, pm2)
-    val pm1x: Double = pm1.x - siz * Math.cos(Math.atan(slope))
-    val pm1y: Double = pm1.y - siz * Math.sin(Math.atan(slope))
-    val pm2x: Double = pm2.x + siz * Math.cos(Math.atan(slope))
-    val pm2y: Double = pm2.y + siz * Math.sin(Math.atan(slope))
+    val pm1x: Double = pm1.x - 100*siz * Math.cos(Math.atan(slope))
+    val pm1y: Double = pm1.y - 100*siz * Math.sin(Math.atan(slope))
+    val pm2x: Double = pm2.x + 100*siz * Math.cos(Math.atan(slope))
+    val pm2y: Double = pm2.y + 100*siz * Math.sin(Math.atan(slope))
 
     val slo = -1.0 / getSlop(pm1, pm2)
     val yd: Double = siz * Math.sin(Math.atan(slo))
@@ -33,6 +33,13 @@ fun makeRoad(pla: Polygon, siz: Double): Road {
     return Road(Polygon(lis))
 
 
+}
+fun manyRoads(pla: Polygon,siz: Double,num:Int):ArrayList<Road>{
+    var lis:ArrayList<Road> = ArrayList()
+    for(i in 0..num){
+        lis.add(makeRoad(pla,siz))
+    }
+    return lis
 }
 
 fun getSlop(p1: Point, p2: Point): Double {
