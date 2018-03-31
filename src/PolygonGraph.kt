@@ -16,7 +16,19 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         return Polygon(node.node.neighbors.map({edge -> edge.data.seg}))
     }
 
-    fun splitPolygon(node: NodeId, clipper: Polygon, n: NodeData) {//clipper is the poly were intersecting and making a new node out of
+    fun placePolygon(node: NodeId, clipper: Polygon, n: NodeData) {
+        splitPolygon(node, clipper, n)
+        fixNode(node.node)
+    }
+
+    fun placePolygons(node: NodeId, clippers: Collection<Polygon>, n: NodeData) {
+        clippers.forEach {
+            clipper -> splitPolygon(node, clipper, n)
+        }
+        fixNode(node.node)
+    }
+
+    private fun splitPolygon(node: NodeId, clipper: Polygon, n: NodeData) {//clipper is the poly were intersecting and making a new node out of
         val inClip: ArrayList<Segment> = arrayListOf()
         val inOld: HashMap<Segment, Graph.Edge<NodeData, Edge>> = hashMapOf()
         val oldPolygon: Polygon = Polygon(node.node.neighbors.map({edge -> edge.data.seg}))
@@ -59,9 +71,6 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         inOld.values.forEach({
             edge -> adjacencies.removeEdge(edge)
         })
-
-        fixNode(node.node)
-
     }
 
     private fun fixNode(node: Graph.Node<NodeData, Edge>){
