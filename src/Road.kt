@@ -1,7 +1,9 @@
-class Road(shap: Polygon, len: Double, slop: Double) : Structure {
+class Road(shap: Polygon, len: Double, slop: Double,p1:Point,p2:Point) : Structure {
     val shape: Polygon = shap
     val length = len
     val slope = slop
+    val pm1 =p1
+    val pm2 =p2
 }
 
 fun poiToRoad(pm1: Point, pm2: Point, siz: Double): ArrayList<Segment> {
@@ -34,19 +36,35 @@ fun makeRoad(pla: Polygon, siz: Double): Road {
 
     val lis: ArrayList<Segment> = poiToRoad(pm1, pm2, siz)
 
-    return Road(Polygon(lis), getDist(pm1, pm2), getSlop(pm1, pm2))
+    return Road(Polygon(lis), getDist(pm1, pm2), getSlop(pm1, pm2),pm1,pm2)
 
 
 }
 
-fun manyRoads(pla: Polygon, siz: Double, num: Int): ArrayList<Road> {
+fun manyRoads(pla: Polygon, siz: Double, num: Int,md:Double): ArrayList<Road> {
     var lis: ArrayList<Road> = ArrayList()
-    for (i in 0..num) {
-        lis.add(makeRoad(pla, siz))
+    var plis:ArrayList<Point> =ArrayList()
+    var i:Int =0
+    while(i<num) {
+        var r:Road =makeRoad(pla, siz)
+        if(disCheck(plis,r,md)){
+            lis.add(r)
+            plis.add(r.pm1)
+            plis.add(r.pm2)
+            i++
+        }
     }
     return lis
 }
 
+fun disCheck(plis:ArrayList<Point>,r:Road,md:Double):Boolean {
+    for (i in 0..(plis.size-1)){
+        if(getDist(plis.get(i),r.pm1)<md||getDist(plis.get(i),r.pm2)<md){
+            return false
+        }
+    }
+    return true
+}
 
 fun getSlop(p1: Point, p2: Point): Double {
     return (p2.y - p1.y) / (p2.x - p1.x)
