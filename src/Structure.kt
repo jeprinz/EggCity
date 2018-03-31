@@ -1,5 +1,4 @@
-abstract class Structure(poly : Polygon){
-    val poly : Polygon = poly
+interface Structure{
 }
 
-class Blank(poly : Polygon) : Structure(poly){ }
+class Blank() : Structure{ }

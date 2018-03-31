@@ -12,11 +12,18 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
         return newNode
     }
 
+    fun getPolygon(node: Graph.Node<NodeData, Edge>): Polygon{
+        return Polygon(node.neighbors.map({edge -> edge.data.seg}))
+    }
+
     fun splitPolygon(node: Graph.Node<NodeData, Edge>, clipper: Polygon, n: NodeData) {//clipper is the poly were intersecting and making a new node out of
         val inClip: ArrayList<Segment> = arrayListOf()
         val inOld: HashMap<Segment, Graph.Edge<NodeData, Edge>> = hashMapOf()
         val oldPolygon: Polygon = Polygon(node.neighbors.map({edge -> edge.data.seg}))
+        println("clipper: ${clipper}")
+        println("oldPolygon: ${oldPolygon}")
         val mincedClipper = oldPolygon.slicePoly(clipper);
+        println("mincedClipper: ${mincedClipper}")
         val mincedEdgesOld = sliceEdges(node.neighbors, clipper)
         println("size mincedClip: ${mincedClipper.segs.size} size mincedEdgesOld: ${mincedEdgesOld.size}")
         mincedClipper.segs.forEach(

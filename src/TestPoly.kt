@@ -6,8 +6,7 @@ fun main(args: Array<String>){
     val r1: Polygon = makeRect(Point(0.0,0.0), 100.0, 10.0)
     val r2 = makeRect(Point(0.0,0.0), 10.0, 100.0)
 
-//    val res = r1.slicePoly(r2)
+    val res = r1.slicePoly(r2)
+    print(res)
 
-    val segres = r1.sliceSegment(seg1)
-    println(segres)
 }

@@ -1,20 +1,27 @@
 import java.awt.Color
 
 fun main(args: Array<String>){
-    val polyG = PolygonGraph<Structure>(ColoredThing(Color.YELLOW, makeRect(Point(0.0,0.0), 100.0, 200.0)))
-    println(polyG.getNodes().first().node.poly.segs)
+    val initalRect = makeRect(Point(0.0,0.0), 100.0, 200.0)
+    val plane = ColoredThing(Color.YELLOW)
+    val polyG = PolygonGraph<Structure>(plane)
+    polyG.splitInnerPolygon(polyG.getNodes().first(), Blank(), initalRect)
 
-    putRectInSpace(polyG.getNodes().first(), polyG, true)
+    val nodes = polyG.getNodes()
+    print(nodes)
 
 
-    println(polyG.getNodes().first().node.poly.segs)
+    putRectInSpace(ArrayList(polyG.getNodes())[1], polyG, true)
+
+
     println(polyG.getNodes().size)
 }
 
+
 fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: PolygonGraph<Structure>, vertical: Boolean): Boolean{
-    val centoid: Point = blank.node.poly.centroid()
-    val width: Double = blank.node.poly.width()
-    val height: Double = blank.node.poly.height()
+    val poly = polyG.getPolygon(blank)
+    val centoid: Point = poly.centroid()
+    val width: Double = poly.width()
+    val height: Double = poly.height()
     if (width > 50 && height > 50){
         val rect: Polygon
         if (vertical){
@@ -23,7 +30,7 @@ fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: Poly
             rect = makeRect(centoid, 10000.0, height*.1)
         }
 
-        val structure = ColoredThing(Color.WHITE, rect)
+        val structure = ColoredThing(Color.WHITE)
 
         polyG.splitPolygon(blank,  rect, structure)
         return true
@@ -32,7 +39,7 @@ fun putRectInSpace(blank : Graph.Node<Structure, PolygonGraph.Edge>, polyG: Poly
     }
 }
 
-class ColoredThing(colr: Color, poly: Polygon): Structure(poly){
+class ColoredThing(colr: Color): Structure{
     val color = colr
 }
 
