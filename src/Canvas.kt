@@ -21,33 +21,10 @@ class Canvas: Application() {
             println("Clicked")
         }
 
-        val pts1 = arrayOf<Double>(
-                20.0, 20.0,
-                20.0, 100.0,
-                200.0, 100.0,
-                200.0, 20.0
-        )
-        val poly1 = PolygonFX()
-        poly1.points.addAll(pts1)
-        poly1.fill = Color.rgb(102,255,153)
-
-        val pts2 = arrayOf<Double>(
-                250.0, 225.0,
-                225.0, 375.0,
-                350.0, 350.0,
-                325.0, 210.0
-        )
-        val poly2 = PolygonFX()
-        poly2.points.addAll(pts2)
-        poly2.fill = Color.rgb(0,153,255)
-
-//        val city = makecity(100.0, 0.3, 100, 10)
+        val city = makecity(100.0, 0.25, 100, 3)
 
         val root = Group()
-//        root.children.add(polyToFXPoly(city.shape))
-
-        root.children.add(poly1)
-        root.children.add(poly2)
+        root.children.add(polyToFXPoly(city.shape))
 
         primaryStage.run {
             scene = Scene(root, 400.0, 400.0)
@@ -65,11 +42,24 @@ class Canvas: Application() {
 }
 
 fun polyToFXPoly(poly : Polygon) : PolygonFX {
-//    val segMap = TreeMap<Segment, Segment>()
     val doubleList = arrayListOf<Double>()
     for (seg in poly.segs) {
-        doubleList.add(seg.p1.x)
-        doubleList.add(seg.p1.y)
+        doubleList.add(seg.p1.x + 200)
+        doubleList.add(seg.p1.y + 200)
+    }
+    println(doubleList.toString())
+    val result = PolygonFX()
+    result.points.addAll(doubleList)
+    return result
+}
+
+fun polyToFXPoly2(poly : Polygon) : PolygonFX {
+    val segMap = TreeMap<Segment, Segment>()
+    val doubleList = arrayListOf<Double>()
+    for (seg1 in poly.segs) {
+        for (seg2 in poly.segs) {
+
+        }
     }
     val result = PolygonFX()
     result.points.addAll(doubleList)
