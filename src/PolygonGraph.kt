@@ -52,6 +52,9 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                     (seg, edge) -> if (clipper.inside(seg)) {
                         inOld.put(seg, edge)
                     }
+                    if (clipper.midpointOn(seg)) {
+                        inOld.put(seg, edge)
+                    }
                 }
         )
 
