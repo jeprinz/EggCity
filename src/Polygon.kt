@@ -2,7 +2,7 @@ class Polygon(nsegs: Collection<Segment>) {
     val pts: ArrayList<Point> = arrayListOf()
     val segs: ArrayList<Segment> = ArrayList(nsegs)
     init {
-        for (i in 0..pts.size) {
+        for (i in 0..pts.size-1) {
             pts.add(segs[i].p1)
         }
 //        for (i in 1..segs.size) {
@@ -91,7 +91,7 @@ class Polygon(nsegs: Collection<Segment>) {
 
     fun area(): Double {
         var shoelace: Double = 0.0
-        for (i in 0..pts.size) {
+        for (i in 0..pts.size-1) {
             shoelace = shoelace + pts[i].x*pts[(i+1)%pts.size].y - pts[i].y*pts[(i+1)%pts.size].x
         }
         return Math.abs(shoelace)/2
@@ -163,7 +163,7 @@ fun main(args: Array<String>) {
 
 fun polyFromPoints(pts : List<Point>) : Polygon{
     val segs = arrayListOf<Segment>()
-    for (i in 0..pts.size){
+    for (i in 0..pts.size-1){
         segs.add(Segment(pts[i%pts.size], pts[(i+1)%pts.size]))
     }
     return Polygon(segs)
