@@ -1,4 +1,4 @@
-fun genCity(size: Double){
+fun genCity(size: Double) : PolygonGraph<Structure>{
     val polyG = PolygonGraph<Structure>(Rtwo())
 
     val city = Blank()
@@ -8,7 +8,7 @@ fun genCity(size: Double){
 
     polyG.splitInnerPolygon(rTwo, city, cityOutline.shape)
 
-
+    return polyG
 
 
 }
