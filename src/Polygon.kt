@@ -154,6 +154,14 @@ class Segment(initial: Point, terminal: Point) {
     override fun toString(): String {
         return "[${p1}, ${p2}]"
     }
+
+    override fun equals(other: Any?): Boolean {
+        return when {
+            this === other -> true
+            other?.javaClass != javaClass -> false
+            else -> (other as Segment).p1 == p1 && other.p2 == p2
+        }
+    }
 }
 
 fun ccw(p1: Point, p2: Point, p3: Point): Boolean { // checks if 3 points are oriented counterclockwise
