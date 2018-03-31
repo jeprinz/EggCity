@@ -9,10 +9,7 @@ import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseDragEvent
-import javafx.scene.input.ZoomEvent
-import javafx.scene.layout.GridPane
+import javafx.scene.input.TransferMode
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.shape.Polygon as PolygonFX
@@ -33,7 +30,11 @@ class Canvas: Application() {
             polyGroup.scaleY = scale
         }
 
-
+//        polyGroup.onDragDetected = EventHandler { event ->
+//            event.consume()
+//            var db = polyGroup.startDragAndDrop(TransferMode.MOVE)
+//
+//        }
 
         val comboVariance = ComboBox<String>(FXCollections.observableArrayList("High", "Medium", "Low"))
         comboVariance.promptText = "Variance"
@@ -64,13 +65,15 @@ class Canvas: Application() {
                 "Low" -> 5
                 else -> 0
             }
-            val cityOutline = makecity(300.0, variance, numPoints, randomness, 1.0)
-            val cityPolyFX = polyToFXPoly(cityOutline.shape)
-            cityPolyFX.fill = Color.rgb(255, 255, 255)
-            cityPolyFX.stroke = Color.rgb(0, 0, 0)
+//            val cityOutline = makecity(300.0, variance, numPoints, randomness, 1.0)
+//            val cityPolyFX = polyToFXPoly(cityOutline.shape)
+//            cityPolyFX.fill = Color.rgb(255, 255, 255)
+//            cityPolyFX.stroke = Color.rgb(0, 0, 0)
+
+            val polygonList = graphToPolyFXList(genCity(100.0))
 
             polyGroup.children.remove(0, polyGroup.children.size)
-            polyGroup.children.add(cityPolyFX)
+            polyGroup.children.addAll(polygonList)
 
             val cityStage = Stage()
             val cityRoot = VBox()
