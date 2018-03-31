@@ -1,17 +1,17 @@
 class Graph<N, E> {
 
-    var nodeList : ArrayList<Node<N, E>> = arrayListOf()
+    var nodeMap: ArrayList<Node<N, E>> = arrayListOf()
     var edgeList : ArrayList<Edge<N, E>> = arrayListOf()
 
     fun addNode(n : N) : Node<N,E>{
         val node = Node<N,E>(n)
-        nodeList.add(node)
+        nodeMap.add(node)
         return node
     }
 
     fun removeNode(node : Node<N, E>) {
         edgeList.removeAll(node.neighbors)
-        nodeList.remove(node)
+        nodeMap.remove(node)
     }
 
     fun removeEdge(edge: Edge<N,E>){
@@ -26,7 +26,7 @@ class Graph<N, E> {
     }
 
     fun addEdge(n1 : Node<N,E>, n2 : Node<N,E>, data :E) {
-        if (!nodeList.contains(n1) || !nodeList.contains(n2)) {
+        if (!nodeMap.contains(n1) || !nodeMap.contains(n2)) {
             throw IllegalStateException("Expected '$n1' and '$n2' nodes to exist in graph")
         }
         val edge = Edge(n1, n2, data)
@@ -36,7 +36,7 @@ class Graph<N, E> {
     }
 
     fun getNodes() : Collection<Node<N,E>>{
-        return nodeList
+        return nodeMap
     }
 
     data class Node<N,E>(val node: N) {
