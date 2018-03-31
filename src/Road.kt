@@ -25,9 +25,9 @@ var segg: ArrayList<Segment> =bla.poly.segs
     var xd:Double=Math.pow(siz*siz/4-yd*yd,.5)
     var lis:ArrayList<Segment> = ArrayList()
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm1x-xd,pm1y-yd)))
+    lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
     lis.add(Segment(Point(pm2x+xd,pm2y+yd),Point(pm2x-xd,pm2y-yd)))
     lis.add(Segment(Point(pm1x+xd,pm1y+yd),Point(pm2x+xd,pm2y+yd)))
-    lis.add(Segment(Point(pm1x-xd,pm1y-yd),Point(pm2x-xd,pm2y-yd)))
 
     return Road(Polygon(lis))
 
