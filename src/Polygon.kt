@@ -24,9 +24,7 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun intersectSegment(segment: Segment): Segment? {
-        segs.forEach(
-                {seg -> if (intersect(seg, segment)) {return seg}}
-        )
+        segs.forEach { seg -> if (intersect(seg, segment)) {return seg}}
         return null
     }
 
