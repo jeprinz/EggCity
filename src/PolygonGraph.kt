@@ -107,6 +107,14 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
 
     inner class NodeId(node: Graph.Node<NodeData, Edge>){
         val node = node//TODO
+        fun getData(): NodeData{
+            return node.node
+        }
+        fun getAdjacentNodes(): Collection<NodeId>{
+            return node.neighbors.map({
+                neighbor -> NodeId(neighbor.otherNode(node))
+            })
+        }
     }
 }
 
