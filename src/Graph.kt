@@ -14,6 +14,13 @@ class Graph<N, E> {
         nodeList.remove(node)
     }
 
+    fun removeEdge(edge: Edge<N,E>){
+        edgeList.remove(edge)
+        for (node in arrayListOf(edge.node1, edge.node2)){
+            node.neighbors.remove(edge)
+        }
+    }
+
     fun hasNode(node : Node<N,E>) : Boolean{
         return getNodes().contains(node)
     }
