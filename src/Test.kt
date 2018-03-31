@@ -1,5 +1,4 @@
 fun main(args: Array<String>){
-    var blah = arrayListOf<Int>()
-    blah.add(3)
-    print(blah.toString())
+    var three = 3F
+    println(three / 0)
 }
