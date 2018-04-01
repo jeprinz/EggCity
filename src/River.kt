@@ -13,12 +13,18 @@ fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
     var slop: Double = 0.0
     for (s in seglis) {
         var pl: ArrayList<Point> = getper(s, wid)
-        if (top.isEmpty() || slop > getSlop(s.p1, s.p2)) {
+        if (top.isEmpty() && bot.isEmpty()) {
             top.add(pl.get(0))
+            bot.add(pl.get(1))
+        }
+        if (slop < getSlop(s.p1, s.p2)) {
+            top.add(top.size - 1, pl.get(0))
+            bot.add(pl.get(1))
         }
         top.add(pl.get(2))
-        if (bot.isEmpty() || slop < getSlop(s.p1, s.p2)) {
-            bot.add(pl.get(1))
+        if (slop > getSlop(s.p1, s.p2)) {
+            bot.add(bot.size - 1, pl.get(1))
+            bot.add(pl.get(0))
         }
         bot.add(pl.get(3))
         slop = getSlop(s.p1, s.p2)
