@@ -7,14 +7,14 @@ fun makeRiver(lis: ArrayList<Point>, wid: Double): River {
 }
 
 fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
-    var seglis: ArrayList<Segment> = pointToSeg(lis)
-    var top: ArrayList<Point> = ArrayList()
-    var bot: ArrayList<Point> = ArrayList()
-    var slop: Double = 0.0
+    val seglis: ArrayList<Segment> = pointToSeg(lis)
+    val top: ArrayList<Point> = ArrayList()
+    val bot: ArrayList<Point> = ArrayList()
+    var slop = 0.0
     for (s in seglis) {
-        var pl: ArrayList<Point> = getper(s, wid)
+        val pl: ArrayList<Point> = getper(s, wid)
         if (top.isEmpty() && bot.isEmpty()) {
-            top.add(pl.get(0))
+            top.add(pl[0])
             bot.add(pl.get(1))
         }
         if (slop < getSlop(s.p1, s.p2)) {
@@ -29,12 +29,12 @@ fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
         bot.add(pl.get(3))
         slop = getSlop(s.p1, s.p2)
     }
-    var lis: ArrayList<Segment> = ArrayList()
-    lis.add(Segment(bot.get(0), top.get(0)))
-    lis.addAll(pointToSeg(top))
-    lis.add(Segment(top.get(top.size - 1), bot.get(bot.size - 1)))
-    lis.addAll(pointToSeg(bot))
-    return Polygon(lis)
+    val liss: ArrayList<Segment> = ArrayList()
+    liss.add(Segment(bot.get(0), top.get(0)))
+    liss.addAll(pointToSeg(top))
+    liss.add(Segment(top.get(top.size - 1), bot.get(bot.size - 1)))
+    liss.addAll(pointToSeg(bot))
+    return Polygon(liss)
 
 }
 
@@ -52,7 +52,7 @@ fun getper(s: Segment, wid: Double): ArrayList<Point> {
 }
 
 fun pointToSeg(lis: ArrayList<Point>): ArrayList<Segment> {
-    var seglis: ArrayList<Segment> = ArrayList()
+    val seglis: ArrayList<Segment> = ArrayList()
     for (i in 1..(lis.size)) {
         seglis.add(Segment(lis.get(i - 1), lis.get(i)))
     }

@@ -20,19 +20,19 @@ fun poiToRoad(pm1: Point, pm2: Point, siz: Double): ArrayList<Segment> {
 
 fun makeRoad(pla: Polygon, siz: Double): Road {
     val segg: ArrayList<Segment> = pla.segs
-    var i1: Int = 0
-    var i2: Int = 0
+    var i1 = 0
+    var i2 = 0
     while (i1 == i2) {
         i1 = (Math.random() * segg.size).toInt()
         i2 = (Math.random() * segg.size).toInt()
     }
     val s1: Segment = segg.get(i1)
     val s2: Segment = segg.get(i2)
-    val p1: Point = getPoint(s1);
+    val p1: Point = getPoint(s1)
     val p2: Point = getPoint(s2)
     val slope: Double = getSlop(p1, p2)
-    val pm1: Point = Point(p1.x - 1000 * siz * Math.cos(Math.atan(slope)), p1.y - 1000 * siz * Math.sin(Math.atan(slope)))
-    val pm2: Point = Point(p2.x + 1000 * siz * Math.cos(Math.atan(slope)), p2.y + 1000 * siz * Math.sin(Math.atan(slope)))
+    val pm1 = Point(p1.x - 1000 * siz * Math.cos(Math.atan(slope)), p1.y - 1000 * siz * Math.sin(Math.atan(slope)))
+    val pm2 = Point(p2.x + 1000 * siz * Math.cos(Math.atan(slope)), p2.y + 1000 * siz * Math.sin(Math.atan(slope)))
 
     val lis: ArrayList<Segment> = poiToRoad(pm1, pm2, siz)
 
@@ -42,11 +42,11 @@ fun makeRoad(pla: Polygon, siz: Double): Road {
 }
 
 fun manyRoads(pla: Polygon, siz: Double, num: Int,md:Double): ArrayList<Road> {
-    var lis: ArrayList<Road> = ArrayList()
-    var plis:ArrayList<Point> =ArrayList()
+    val lis: ArrayList<Road> = ArrayList()
+    val plis: ArrayList<Point> = ArrayList()
     var i:Int =0
     while(i<num) {
-        var r:Road =makeRoad(pla, siz)
+        val r: Road = makeRoad(pla, siz)
         if(disCheck(plis,r,md)){
             lis.add(r)
             plis.add(r.pm1)
