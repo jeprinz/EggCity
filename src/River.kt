@@ -2,12 +2,21 @@ class River(shap: Polygon) : Structure {
     val shape: Polygon = shap
 }
 
-fun makeRiver(lis: ArrayList<Point>, wid: Double): River {
-    return River(longboy(lis, wid))
+fun makeRiver(poly: Polygon, wid: Double): River {
+    return River(longboy(poly, wid))
 }
 
-fun longboy(lis: ArrayList<Point>, wid: Double): Polygon {
-    val seglis: ArrayList<Segment> = pointToSeg(lis)
+fun longboy(poly: Polygon, wid: Double): Polygon {
+    var i1 = 0
+    var i2 = 0
+    while (i1 == i2) {
+        i1 = (Math.random() * poly.segs.size).toInt()
+        i2 = (Math.random() * poly.segs.size).toInt()
+    }
+    val s1: Segment = poly.segs.get(i1)
+    val s2: Segment = poly.segs.get(i2)
+    val seglis: ArrayList<Segment> = ArrayList()
+    seglis.add(Segment(s1.p1, s2.p2))
     val top: ArrayList<Point> = ArrayList()
     val bot: ArrayList<Point> = ArrayList()
     var slop = 0.0
