@@ -223,9 +223,14 @@ fun intersect(s1: Segment, s2: Segment): Boolean {
     if ((ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))) {
         val ip = intersection(s1, s2)
         if (ip.equals(Point(Double.NaN, Double.NaN))) {return false}
-        return !(ip.equals(s1.p1) || ip.equals(s1.p2) || ip.equals(s2.p1) || ip.equals(s2.p2))
+        val threshold = .1
+        return !(distance(ip,s1.p1) < threshold || distance(ip,s1.p2) < threshold || distance(ip,s2.p1) < threshold || distance(ip,s2.p2) < threshold)
     }
     return false
+}
+
+fun distance(p1: Point, p2: Point): Double {
+    return Segment(p1,p2).length()
 }
 
 fun concurrence(s1: Segment, s2: Segment): Segment? {
