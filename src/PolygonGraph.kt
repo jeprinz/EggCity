@@ -53,7 +53,6 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
                     }
                 }
         )
-        println("inOld: ${inOld}, inClip: ${inClip}")
 
         val newNode = adjacencies.addNode(n)
         inClip.forEach(
@@ -77,7 +76,6 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
             }
         }
 
-        println("newEdges before fix: ${node.getPolygon()}")
     }
 
     private fun fixNode(node: Graph.Node<NodeData, Edge>){
@@ -96,13 +94,6 @@ class PolygonGraph<NodeData>(initialNode: NodeData) { // NodeData or No Data????
             for (edge in edgeGroup){
                 adjacencies.addEdge(newNode, edge.otherNode(node), edge.data)
             }
-            println("the poly is ${getPolygon(NodeId(newNode))}")
-
-            println("in fixnode still::")
-            getNodes().forEach{
-                nodeid -> println(nodeid.getPolygon())
-            }
-            println("end fixnode")
         }
     }
 

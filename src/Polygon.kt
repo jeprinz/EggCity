@@ -114,6 +114,38 @@ class Polygon(nsegs: Collection<Segment>) {
         return segs.toString()
     }
 
+
+    fun getOrderedPoints(): List<Point>{
+        val ourSegs = HashSet<Segment>(segs)
+        fun popSegWPoint(p: Point): Point{
+            for (seg in ourSegs){
+                if (seg.p1 == p || seg.p2 == p){
+                    ourSegs.remove(seg)
+                    return seg.otherPoint(p)
+                }
+            }
+            throw RuntimeException("not a closed polygon")
+        }
+
+        val points = arrayListOf<Point>()
+        val firstSeg = ourSegs.first()
+        ourSegs.remove(firstSeg)
+        val startPoint = firstSeg.p1
+        val endPoint = firstSeg.p2
+
+        var p : Point = startPoint
+
+        while(p != endPoint){
+            points.add(p)
+            println("Point: ${p}")
+            p = popSegWPoint(p)
+        }
+
+        points.add(endPoint)
+
+        return points
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
@@ -179,6 +211,16 @@ class Segment(initial: Point, terminal: Point) {
             return true
         }
         return false
+    }
+
+    fun otherPoint(p: Point): Point{
+        if (p == p1){
+            return p2
+        } else if (p == p2){
+            return p1
+        } else {
+            throw RuntimeException("msdf")
+        }
     }
 
     fun slope(): Double {
