@@ -15,7 +15,7 @@ class Polygon(nsegs: Collection<Segment>) {
     }
 
     fun inside(pt: Point): Boolean {
-        val ray = Segment(pt, Point(Double.MAX_VALUE, Double.MAX_VALUE))
+        val ray = Segment(pt, Point(999999999.0,999999999.0))
         var inside = false
         if (includesPoint(pt)) {
             return false
@@ -114,6 +114,38 @@ class Polygon(nsegs: Collection<Segment>) {
         return segs.toString()
     }
 
+
+    fun getOrderedPoints(): List<Point>{
+        val ourSegs = HashSet<Segment>(segs)
+        fun popSegWPoint(p: Point): Point{
+            for (seg in ourSegs){
+                if (seg.p1 == p || seg.p2 == p){
+                    ourSegs.remove(seg)
+                    return seg.otherPoint(p)
+                }
+            }
+            throw RuntimeException("not a closed polygon")
+        }
+
+        val points = arrayListOf<Point>()
+        val firstSeg = ourSegs.first()
+        ourSegs.remove(firstSeg)
+        val startPoint = firstSeg.p1
+        val endPoint = firstSeg.p2
+
+        var p : Point = startPoint
+
+        while(p != endPoint){
+            points.add(p)
+            println("Point: ${p}")
+            p = popSegWPoint(p)
+        }
+
+        points.add(endPoint)
+
+        return points
+    }
+
 }
 
 class Path(npts: ArrayList<Point>) {
@@ -181,6 +213,16 @@ class Segment(initial: Point, terminal: Point) {
         return false
     }
 
+    fun otherPoint(p: Point): Point{
+        if (p == p1){
+            return p2
+        } else if (p == p2){
+            return p1
+        } else {
+            throw RuntimeException("msdf")
+        }
+    }
+
     fun slope(): Double {
         return (p1.y - p2.y)/(p1.x - p2.x)
     }
@@ -222,9 +264,14 @@ fun intersect(s1: Segment, s2: Segment): Boolean {
     if ((ccw(s1.p1, s2.p1, s2.p2)  != ccw(s1.p2, s2.p1, s2.p2)) && (ccw(s1.p1, s1.p2, s2.p1) != ccw(s1.p1, s1.p2, s2.p2))) {
         val ip = intersection(s1, s2)
         if (ip.equals(Point(Double.NaN, Double.NaN))) {return false}
-        return !(ip.equals(s1.p1) || ip.equals(s1.p2) || ip.equals(s2.p1) || ip.equals(s2.p2))
+        val threshold = .1
+        return !(distance(ip,s1.p1) < threshold || distance(ip,s1.p2) < threshold || distance(ip,s2.p1) < threshold || distance(ip,s2.p2) < threshold)
     }
     return false
+}
+
+fun distance(p1: Point, p2: Point): Double {
+    return Segment(p1,p2).length()
 }
 
 fun concurrence(s1: Segment, s2: Segment): Segment? {

@@ -13,4 +13,11 @@ fun main(args: Array<String>) {
     println(ArrayList(polyG.getNodes())[1].getPolygon())
     println(ArrayList(polyG.getNodes())[2].getPolygon())
     println(ArrayList(polyG.getNodes())[3].getPolygon())
+
+//    val p1 = Point(0.0,0.0)
+//    val p2 = Point(10.0,-10.0)
+//    val p3 = Point(100.0,-100.0)
+//
+//    println("1: ${initialRect.inside(p1)} 2: ${initialRect.inside(p2)} 3: ${initialRect.inside(p3)}")
+
 }
