@@ -18,7 +18,7 @@ fun genCity(size: Double) : PolygonGraph<Structure>{
 //
 //    return polyG
 
-    for (i in 0..19){
+    for (i in 0..15){
         val blank = getBlank(polyG)
         if (blank != null){
             doBlank(polyG, size, blank)
@@ -46,10 +46,10 @@ fun doBlank(polyG: PolygonGraph<Structure>, size: Double, blank: PolygonGraph<St
 
     val proportion = area / (size * size)
 
-    if (proportion > 0.2){
+    if (proportion > 0.2 || true){
         val road = makeRoad(blankPoly, 30.0)
         polyG.placePolygon(blank, road.shape, road)
-    } else if (proportion > 0.1) {
+    } else {
         val plot = buildPlot(blank, polyG)
         polyG.placePolygon(blank, plot.first, plot.second)
     }
@@ -57,7 +57,7 @@ fun doBlank(polyG: PolygonGraph<Structure>, size: Double, blank: PolygonGraph<St
 }
 
 fun main(args: Array<String>){
-    val city = genCity(500.0)
+    val city = genCity(1000.0)
     city.getNodes().forEach{
         node ->
         println("heres a node for ya")

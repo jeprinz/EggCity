@@ -1,3 +1,4 @@
+import com.sun.corba.se.impl.orbutil.graph.NodeData
 import javafx.application.Application
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
@@ -9,14 +10,15 @@ import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
-import javafx.scene.input.TransferMode
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import javafx.scene.shape.Line
 import javafx.scene.shape.Polygon as PolygonFX
 import javafx.stage.Stage
 import kotlin.collections.LinkedHashMap
 
 class Canvas: Application() {
+
 
     override fun start(primaryStage: Stage?) {
         primaryStage ?: return
@@ -29,12 +31,6 @@ class Canvas: Application() {
             polyGroup.scaleX = scale
             polyGroup.scaleY = scale
         }
-
-//        polyGroup.onDragDetected = EventHandler { event ->
-//            event.consume()
-//            var db = polyGroup.startDragAndDrop(TransferMode.MOVE)
-//
-//        }
 
         val comboVariance = ComboBox<String>(FXCollections.observableArrayList("High", "Medium", "Low"))
         comboVariance.promptText = "Variance"
@@ -106,8 +102,8 @@ class Canvas: Application() {
 
 fun polyToFXPoly(poly : Polygon) : PolygonFX {
     val segMap = LinkedHashMap<Segment, Segment>()
-    var found = false
     for (seg1 in poly.segs) {
+        var found = false
         for (seg2 in poly.segs) {
             if (matchOnePoint(seg1, seg2)) {
                 if (segMap[seg2] == seg1) {
@@ -122,21 +118,19 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
             throw RuntimeException("Segment has no adjacent segment")
         }
     }
-    val diffX = 0.0
-    val diffY = 0.0
     val firstSeg = poly.segs[0]
-    val doubleList = arrayListOf(firstSeg.p1.x + diffX, firstSeg.p1.y + diffY)
+    val doubleList = arrayListOf(firstSeg.p1.x, firstSeg.p1.y)
     var prevSeg = firstSeg
     var currSeg = segMap[firstSeg]
     while (currSeg != firstSeg) {
         when {
             currSeg!!.p1 == prevSeg.p1 || currSeg.p1 == prevSeg.p2 -> {
-                doubleList.add(currSeg.p1.x + diffX)
-                doubleList.add(currSeg.p1.y + diffY)
+                doubleList.add(currSeg.p1.x)
+                doubleList.add(currSeg.p1.y)
             }
             currSeg.p2 == prevSeg.p1 || currSeg.p2 == prevSeg.p2 -> {
-                doubleList.add(currSeg.p2.x + diffX)
-                doubleList.add(currSeg.p2.y + diffY)
+                doubleList.add(currSeg.p2.x)
+                doubleList.add(currSeg.p2.y)
             }
         }
         prevSeg = currSeg!!
@@ -148,26 +142,56 @@ fun polyToFXPoly(poly : Polygon) : PolygonFX {
     return result
 }
 
+fun polyToLinesFX(poly: Polygon, node: Structure) : ArrayList<Line> {
+    val linesFX = ArrayList<Line>()
+    for (seg in poly.segs) {
+        val line = Line(seg.p1.x, seg.p1.y, seg.p2.x, seg.p2.y)
+        linesFX.add(line)
+        when (node.javaClass) {
+            Road::class -> {
+                line.stroke = Color.rgb(255, 0, 0)
+                line.fill = Color.rgb(255, 0, 0)
+            }
+            River::class -> {
+                line.fill = Color.rgb(0, 102, 255)
+            }
+            else -> {
+                line.fill = Color.rgb(0, 0, 0)
+                line.stroke = Color.rgb(0, 0, 0)
+            }
+        }
+    }
+    return linesFX
+}
+
 fun matchOnePoint(seg1: Segment, seg2: Segment) : Boolean {
     return (seg1.p1 == seg2.p1 || seg1.p1 == seg2.p2 || seg1.p2 == seg2.p1 || seg1.p2 == seg2.p2) && seg1 != seg2
 }
 
-fun graphToPolyFXList(polygonGraph : PolygonGraph<Structure>): ArrayList<PolygonFX> {
+fun graphToPolyFXList(polygonGraph : PolygonGraph<Structure>): ArrayList<Line> {
     val nodesList = polygonGraph.getNodes()
-    val polyFXList = ArrayList<PolygonFX>()
+    val lineFXList = ArrayList<Line>()
     for (node in nodesList) {
         val nodePoly = node.getPolygon()
-        val nodePolyFX = polyToFXPoly(nodePoly)
-        when (node.getData().javaClass) {
-            Road::class -> {
-                nodePolyFX.fill = Color.rgb(0, 0, 100)
-            }
-            else -> {
-                nodePolyFX.fill = Color.rgb(255, 255, 255)
-                nodePolyFX.stroke = Color.rgb(0, 0, 0)
-            }
-        }
-        polyFXList.add(nodePolyFX)
+        val nodePolyFX = polyToLinesFX(nodePoly, node.getData())
+//        when (node.getData().javaClass) {
+//            Road::class -> {
+//                nodePolyFX.fill = Color.rgb(0, 0, 0)
+//            }
+//            River::class -> {
+//                nodePolyFX.fill = Color.rgb(0, 102, 255)
+//            }
+//            else -> {
+//                nodePolyFX.fill = Color.rgb(255, 255, 255)
+//                nodePolyFX.stroke = Color.rgb(0, 0, 0)
+//            }
+//        }
+        lineFXList.addAll(nodePolyFX)
     }
-    return polyFXList
+    return lineFXList
+}
+
+fun vClose(p1 : Point, p2: Point) : Boolean {
+    val threshold = .0001
+    return distance(p1, p2) <= threshold
 }
